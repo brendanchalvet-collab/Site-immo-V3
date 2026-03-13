@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0D1B3D;
+}
+
+/* ===== HERO BG SPLIT ===== */
+.login-page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 80px);
+}
+
+.login-left {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 60px 56px;
+}
+.login-left-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('images/hero.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.login-left-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(13, 27, 61, 0.92) 0%,
+    rgba(13, 27, 61, 0.45) 55%,
+    rgba(13, 27, 61, 0.15) 100%
+  );
+}
+.login-left-content {
+  position: relative;
+  z-index: 2;
+}
+.login-left-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #D4AF37;
+  margin-bottom: 16px;
+}
+.login-left h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 400;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.login-left h2 em { font-style: italic; color: #D4AF37; }
+.login-left p {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.8;
+  max-width: 380px;
+}
+
+/* ===== RIGHT PANEL ===== */
+.login-right {
+  background: #f5f4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
+}
+
+.login-box {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #ece9e0;
+  box-shadow: 0 24px 60px rgba(13, 27, 61, 0.1);
+  padding: 44px 40px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Logo mini */
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.login-logo img {
+  height: 44px;
+  object-fit: contain;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-title .label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  display: block;
+  margin-bottom: 8px;
+}
+.login-title h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.7rem;
+  font-weight: 400;
+  color: #0D1B3D;
+  line-height: 1.2;
+}
+.login-title h1 em { font-style: italic; color: #D4AF37; }
+.login-title .subtitle {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: #888;
+  margin-top: 8px;
+  display: block;
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  background: #f5f4f0;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 7px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #999;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.05em;
+}
+.auth-tab.active {
+  background: white;
+  color: #0D1B3D;
+  box-shadow: 0 2px 8px rgba(13, 27, 61, 0.1);
+}
+
+/* Google button */
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid #e0ddd6;
+  border-radius: 10px;
+  background: white;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.03em;
+}
+.btn-google:hover {
+  background: #f9f8f5;
+  border-color: #ccc;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.btn-google:active { transform: translateY(1px); }
+
+/* Séparateur */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  color: #bbb;
+  letter-spacing: 0.08em;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e8e5de;
+}
+
+/* Form fields */
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 6px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.field input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #e0ddd6;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #0D1B3D;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field input:focus {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+.field input::placeholder { color: #bbb; }
+
+/* Password field wrapper */
+.field-password { position: relative; }
+.field-password input { padding-right: 42px; }
+.toggle-pw {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #aaa;
+  font-size: 15px;
+  line-height: 1;
+}
+.toggle-pw:hover { color: #0D1B3D; }
+
+/* Forgot password */
+.forgot {
+  text-align: right;
+  margin-top: 6px;
+}
+.forgot a {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  color: #D4AF37;
+  text-decoration: none;
+  font-weight: 400;
+}
+.forgot a:hover { text-decoration: underline; }
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 13px;
+  background: #0D1B3D;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-submit:hover { background: #1F3A73; }
+.btn-submit:active { transform: translateY(1px); }
+.btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+/* Switch text */
+.switch-text {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 300;
+  color: #888;
+}
+.switch-text button {
+  background: none;
+  border: none;
+  color: #D4AF37;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+.switch-text button:hover { text-decoration: underline; }
+
+/* Message d'erreur / succès */
+.msg {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  display: none;
+  line-height: 1.5;
+}
+.msg.error {
+  background: #fff0f0;
+  border: 1px solid #f0c0c0;
+  color: #c0392b;
+  display: block;
+}
+.msg.success {
+  background: #f0fff4;
+  border: 1px solid #b7e1c4;
+  color: #1e7e3e;
+  display: block;
+}
+
+/* Register extra field */
+.field-extra { display: none; }
+.register-mode .field-extra { display: block; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .login-page { grid-template-columns: 1fr; }
+  .login-left { display: none; }
+  .login-right { padding: 40px 24px; min-height: calc(100vh - 80px); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+
+    <div class="nav-dropdown-wrap">
+        <a class="nav-dropdown-trigger">Transaction ▾</a>
+        <div class="nav-dropdown">
+          <a href="achat.html">Acheter</a>
+          <a href="vente.html">Vendre</a>
+        </div>
+    </div>
+
+    <div class="nav-dropdown-wrap">
+        <a class="nav-dropdown-trigger">Location ▾</a>
+        <div class="nav-dropdown">
+          <a href="locations.html">Biens à louer</a>
+          <a href="gestion.html">Gestion locative</a>
+        </div>
+    </div>
+
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+    <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="login-page">
+
+  <!-- GAUCHE : visuel -->
+  <div class="login-left">
+    <div class="login-left-bg"></div>
+    <div class="login-left-overlay"></div>
+    <div class="login-left-content">
+      <p class="login-left-label">Votre espace personnel</p>
+      <h2>Gérez vos favoris<br>et vos <em>alertes.</em></h2>
+      <p>Sauvegardez les biens qui vous intéressent, configurez des alertes personnalisées et suivez l'évolution du marché immobilier en Bretagne et sur la Côte d'Azur.</p>
+    </div>
+  </div>
+
+  <!-- DROITE : formulaire -->
+  <div class="login-right">
+    <div class="login-box" id="login-box">
+
+      <div class="login-logo">
+        <img src="images/logo2.jpeg" alt="KELO'ESTATE">
+      </div>
+
+      <div class="login-title">
+        <span class="label">Espace client</span>
+        <h1>Votre compte <em>KELO'ESTATE</em></h1>
+        <span class="subtitle">Accédez à vos favoris et alertes personnalisées</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchMode('login')">Se connecter</button>
+        <button class="auth-tab" id="tab-register" onclick="switchMode('register')">Créer un compte</button>
+      </div>
+
+      <!-- Message erreur / succès -->
+      <div class="msg" id="msg"></div>
+
+      <!-- Bouton Google -->
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continuer avec Google
+      </button>
+
+      <div class="divider">ou avec votre email</div>
+
+      <!-- Prénom/Nom (inscription seulement) -->
+      <div class="field field-extra" id="field-nom">
+        <label>Prénom &amp; Nom</label>
+        <input type="text" id="input-nom" placeholder="Jean Dupont" autocomplete="name">
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label>Adresse email</label>
+        <input type="email" id="input-email" placeholder="votre@email.fr" autocomplete="email">
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="field">
+        <label>Mot de passe</label>
+        <div class="field-password">
+          <input type="password" id="input-password" placeholder="••••••••" autocomplete="current-password">
+          <button class="toggle-pw" onclick="togglePw()" title="Afficher/masquer">👁</button>
+        </div>
+        <div class="forgot" id="forgot-wrap">
+          <a href="#" onclick="resetPassword()">Mot de passe oublié ?</a>
+        </div>
+      </div>
+
+      <!-- Confirmer mot de passe (inscription) -->
+      <div class="field field-extra" id="field-confirm">
+        <label>Confirmer le mot de passe</label>
+        <div class="field-password">
+          <input type="password" id="input-confirm" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-submit" onclick="handleSubmit()">Se connecter</button>
+
+      <div class="switch-text" id="switch-text">
+        Pas encore de compte ?
+        <button onclick="switchMode('register')">Créer un compte</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<!-- ============================================================ -->
+<!--  FIREBASE CONFIG                                             -->
+<!--  👉 Remplacez les valeurs ci-dessous par celles de votre    -->
+<!--     projet Firebase (console.firebase.google.com)           -->
+<!-- ============================================================ -->
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBlrPa4c7Hl7CY5EY5ssLwsLqMbOGL7v6k",
+  authDomain: "keloestate.firebaseapp.com",
+  projectId: "keloestate",
+  storageBucket: "keloestate.firebasestorage.app",
+  messagingSenderId: "510035287199",
+  appId: "1:510035287199:web:2c1d6bb108b923837256aa",
+  measurementId: "G-RLXKM58V6Z"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+auth.languageCode = 'fr';
+
+/* ---- Mode : login / register ---- */
+let mode = 'login';
+
+function switchMode(newMode) {
+  mode = newMode;
+  clearMsg();
+
+  const box = document.getElementById('login-box');
+  const extras = document.querySelectorAll('.field-extra');
+  const tabLogin = document.getElementById('tab-login');
+  const tabRegister = document.getElementById('tab-register');
+  const btnSubmit = document.getElementById('btn-submit');
+  const switchText = document.getElementById('switch-text');
+  const forgotWrap = document.getElementById('forgot-wrap');
+
+  if (mode === 'register') {
+    box.classList.add('register-mode');
+    extras.forEach(e => e.style.display = 'block');
+    tabLogin.classList.remove('active');
+    tabRegister.classList.add('active');
+    btnSubmit.textContent = 'Créer mon compte';
+    switchText.innerHTML = 'Déjà un compte ? <button onclick="switchMode(\'login\')">Se connecter</button>';
+    forgotWrap.style.display = 'none';
+    document.getElementById('input-password').autocomplete = 'new-password';
+  } else {
+    box.classList.remove('register-mode');
+    extras.forEach(e => e.style.display = 'none');
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+    btnSubmit.textContent = 'Se connecter';
+    switchText.innerHTML = 'Pas encore de compte ? <button onclick="switchMode(\'register\')">Créer un compte</button>';
+    forgotWrap.style.display = 'block';
+    document.getElementById('input-password').autocomplete = 'current-password';
+  }
+}
+
+/* ---- Google ---- */
+function loginGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account', hl: 'fr' });
+
+  auth.signInWithPopup(provider)
+    .then(result => {
+      showMsg('Bienvenue, ' + result.user.displayName + ' !', 'success');
+      setTimeout(() => window.location.href = 'espace-client.html', 1500);
+    })
+    .catch(err => showMsg(translateError(err.code), 'error'));
+}
+
+/* ---- Email / mot de passe ---- */
+function handleSubmit() {
+  clearMsg();
+  const email    = document.getElementById('input-email').value.trim();
+  const password = document.getElementById('input-password').value;
+
+  if (!email || !password) {
+    return showMsg('Veuillez remplir tous les champs.', 'error');
+  }
+
+  document.getElementById('btn-submit').disabled = true;
+
+  if (mode === 'register') {
+    const nom     = document.getElementById('input-nom').value.trim();
+    const confirm = document.getElementById('input-confirm').value;
+
+    if (!nom) {
+      document.getElementById('btn-submit').disabled = false;
+      return showMsg('Veuillez indiquer votre prénom et nom.', 'error');
+    }
+    if (password !== confirm) {
+      document.getElementById('btn-submit').disabled = false;
+      return showMsg('Les mots de passe ne correspondent pas.', 'error');
+    }
+    if (password.length < 6) {
+      document.getElementById('btn-submit').disabled = false;
+      return showMsg('Le mot de passe doit contenir au moins 6 caractères.', 'error');
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(result => result.user.updateProfile({ displayName: nom }))
+      .then(() => {
+        showMsg('Compte créé avec succès ! Bienvenue 🎉', 'success');
+        setTimeout(() => window.location.href = 'espace-client.html', 1800);
+      })
+      .catch(err => {
+        document.getElementById('btn-submit').disabled = false;
+        showMsg(translateError(err.code), 'error');
+      });
+
+  } else {
+    auth.signInWithEmailAndPassword(email, password)
+      .then(result => {
+        showMsg('Connexion réussie. Bienvenue !', 'success');
+        setTimeout(() => window.location.href = 'espace-client.html', 1200);
+      })
+      .catch(err => {
+        document.getElementById('btn-submit').disabled = false;
+        showMsg(translateError(err.code), 'error');
+      });
+  }
+}
+
+/* ---- Mot de passe oublié ---- */
+function resetPassword() {
+  const email = document.getElementById('input-email').value.trim();
+  if (!email) {
+    return showMsg('Entrez votre email ci-dessus, puis cliquez sur "Mot de passe oublié".', 'error');
+  }
+  auth.sendPasswordResetEmail(email)
+    .then(() => showMsg('Un email de réinitialisation a été envoyé à ' + email + '.', 'success'))
+    .catch(err => showMsg(translateError(err.code), 'error'));
+}
+
+/* ---- Afficher/masquer mot de passe ---- */
+function togglePw() {
+  const input = document.getElementById('input-password');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+/* ---- Messages ---- */
+function showMsg(text, type) {
+  const el = document.getElementById('msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+}
+function clearMsg() {
+  const el = document.getElementById('msg');
+  el.textContent = '';
+  el.className = 'msg';
+}
+
+/* ---- Traduction des codes d'erreur Firebase ---- */
+function translateError(code) {
+  const errors = {
+    'auth/email-already-in-use':    'Cette adresse email est déjà associée à un compte.',
+    'auth/invalid-email':           'Adresse email invalide.',
+    'auth/user-not-found':          'Aucun compte trouvé avec cet email.',
+    'auth/wrong-password':          'Mot de passe incorrect.',
+    'auth/too-many-requests':       'Trop de tentatives. Réessayez dans quelques minutes.',
+    'auth/weak-password':           'Mot de passe trop faible (6 caractères minimum).',
+    'auth/popup-closed-by-user':    'Connexion Google annulée.',
+    'auth/network-request-failed':  'Erreur réseau. Vérifiez votre connexion.',
+  };
+  return errors[code] || 'Une erreur est survenue. Veuillez réessayer.';
+}
+
+/* ---- Détecter si déjà connecté ---- */
+auth.onAuthStateChanged(user => {
+  if (user) {
+    window.location.href = 'espace-client.html';
+  }
+});
+
+/* ---- Hamburger nav ---- */
+document.querySelector('.hamburger')?.addEventListener('click', () => {
+  document.querySelector('.menu').classList.toggle('active');
+  document.querySelector('.hamburger').classList.toggle('open');
+});
+</script>
+
+</body>
+</html>

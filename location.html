@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail de la location — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ============================= */
+/* CONTAINER                     */
+/* ============================= */
+
+.bien-container {
+    margin-top: 84px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px 24px 60px 24px;
+}
+
+.bien-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* ============================= */
+/* GALERIE                       */
+/* ============================= */
+
+.bien-images {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#main-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.12);
+    transition: 0.3s;
+}
+
+.miniatures {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.miniatures img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.2s;
+}
+
+.miniatures img:hover,
+.miniatures img.active {
+    border-color: #D4AF37;
+    transform: scale(1.05);
+}
+
+/* ============================= */
+/* INFOS BIEN                    */
+/* ============================= */
+
+.bien-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 10px;
+}
+
+.bien-info h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+#prix-bien {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #D4AF37;
+    letter-spacing: 0.01em;
+    margin: 0;
+}
+
+/* Badge statut */
+.bien-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: fit-content;
+    line-height: 1;
+}
+
+.bien-badge.disponible { background: rgba(13, 27, 61, 0.85);  color: white; }
+.bien-badge.reserve    { background: rgba(212, 175, 55, 0.9);  color: #0D1B3D; }
+.bien-badge.loue       { background: rgba(0, 0, 0, 0.6);       color: white; }
+
+/* Caractéristiques */
+.bien-caracteristiques {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: #fdfcf8;
+    border: 1px solid #ece9e0;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.carac-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: 'Jost', sans-serif;
+}
+
+.carac-item span {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.carac-item strong {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #0D1B3D;
+}
+
+/* Boutons */
+.bien-btns {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+
+.contact-btn {
+    font-family: 'Jost', sans-serif;
+    padding: 11px 22px;
+    background: #D4AF37;
+    color: #0D1B3D;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.contact-btn:hover { background: #b99a2f; }
+
+/* Description */
+.bien-description-full {
+    font-family: 'Jost', sans-serif;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid #ece9e0;
+    color: #555;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.85;
+}
+
+/* ============================= */
+/* CAROUSEL                      */
+/* ============================= */
+
+.biens {
+    background: white;
+    border-top: 1px solid #ece9e0;
+    padding: 70px 24px;
+}
+
+.biens h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 50px;
+}
+
+.biens-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+}
+
+.biens-grid::-webkit-scrollbar { display: none; }
+
+.bien-card {
+    flex: 0 0 300px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bien-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 45px rgba(13, 27, 61, 0.12);
+}
+
+.bien-card img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+    display: block;
+}
+
+.image-container { position: relative; }
+
+.bien-card .bien-info {
+    padding: 16px 18px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.bien-card .bien-info h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 6px;
+}
+
+.bien-card .bien-info .prix {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #D4AF37;
+}
+
+/* Badges carousel */
+.badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-radius: 20px;
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.badge.vente  { background: rgba(13, 27, 61, 0.85);  color: white; }
+.badge.offre  { background: rgba(212, 175, 55, 0.9);  color: #0D1B3D; }
+.badge.vendu  { background: rgba(0, 0, 0, 0.6);       color: white; }
+
+/* Flèches */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #0D1B3D;
+    color: #D4AF37;
+    border: 2px solid #D4AF37;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.arrow:hover { background: #1F3A73; }
+.prev { left: 0; }
+.next { right: 0; }
+
+/* ============================= */
+/* RESPONSIVE                    */
+/* ============================= */
+
+@media (max-width: 768px) {
+    .bien-container { padding: 24px 16px 40px 16px; }
+    .bien-top { grid-template-columns: 1fr; gap: 24px; }
+    #main-img { height: 260px; }
+    .bien-caracteristiques { grid-template-columns: 1fr 1fr; }
+    .carousel-container { padding: 0 20px; }
+    .biens-grid { padding-right: 40px; }
+    .bien-card { flex: 0 0 75vw; }
+    .arrow { display: none; }
+}
+
+@media (max-width: 480px) {
+    .bien-caracteristiques { grid-template-columns: 1fr; }
+    .bien-btns { flex-direction: column; }
+    .back-btn, .contact-btn { text-align: center; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html">
+      <img src="images/logo2.jpeg" alt="logo">
+    </a>
+  </div>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+    <a href="achat-vente.html">Achat / Vente</a>
+    <a href="gestion.html">Gestion locative</a>
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- LOCATION DETAIL -->
+<section id="bien-detail" class="bien-container">
+
+    <div class="bien-top">
+
+        <!-- GALERIE -->
+        <div class="bien-images">
+            <img id="main-img" src="" alt="Image de la location">
+            <div class="miniatures" id="miniatures"></div>
+        </div>
+
+        <!-- INFOS -->
+        <div class="bien-info">
+            <div id="badge-bien"></div>
+            <h2 id="titre-bien"></h2>
+            <p id="prix-bien"></p>
+            <div class="bien-caracteristiques" id="caracteristiques"></div>
+            <div class="bien-btns">
+                <a class="contact-btn" href="contact.html">Contacter l'agence</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+    <p class="bien-description-full" id="description-bien"></p>
+
+</section>
+
+<!-- AUTRES LOCATIONS -->
+<section class="biens">
+    <h2>Autres locations</h2>
+    <div class="carousel-container" id="locations-carousel">
+        <button class="arrow prev">&#10094;</button>
+        <div class="biens-grid" id="locations-grid"></div>
+        <button class="arrow next">&#10095;</button>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<!-- SCRIPT LOCATION -->
+<script>
+fetch('locations.json')
+    .then(res => res.json())
+    .then(locations => {
+        const params = new URLSearchParams(window.location.search);
+        const index = parseInt(params.get('index'));
+        const bien = locations[index];
+
+        if (bien) {
+            const mainImg = document.getElementById('main-img');
+            mainImg.src = bien.images ? bien.images[0] : bien.image;
+            mainImg.alt = bien.titre;
+
+            document.getElementById('titre-bien').innerText = bien.titre;
+            document.getElementById('prix-bien').innerText = bien.prix;
+            document.getElementById('description-bien').innerText = bien.description;
+
+            const badgeDiv = document.getElementById('badge-bien');
+            const statutMap = {
+                "disponible": { cls: "disponible", label: "Disponible" },
+                "loué":       { cls: "loue",       label: "Loué" },
+                "réservé":    { cls: "reserve",    label: "Réservé" }
+            };
+            if (bien.statut && statutMap[bien.statut]) {
+                const s = statutMap[bien.statut];
+                badgeDiv.innerHTML = `<span class="bien-badge ${s.cls}">${s.label}</span>`;
+            }
+
+            const caracDiv = document.getElementById('caracteristiques');
+            const caracs = [
+                { label: "Surface",  value: bien.surface  ? bien.surface + " m²"    : null },
+                { label: "Pièces",   value: bien.pieces   ? bien.pieces + " pièces" : null },
+                { label: "Chambres", value: bien.chambres ? bien.chambres + " ch."  : null },
+                { label: "Charges",  value: bien.charges  ? bien.charges + " € CC"  : null },
+                { label: "Dépôt",    value: bien.depot    ? bien.depot + " €"       : null },
+                { label: "Ville",    value: bien.ville    || null },
+                { label: "Type",     value: bien.type     || null },
+                { label: "DPE",      value: bien.dpe      || null },
+            ];
+            caracs.forEach(c => {
+                if (c.value) {
+                    caracDiv.innerHTML += `
+                        <div class="carac-item">
+                            <span>${c.label}</span>
+                            <strong>${c.value}</strong>
+                        </div>`;
+                }
+            });
+            if (caracDiv.children.length === 0) caracDiv.style.display = 'none';
+
+            const miniaturesDiv = document.getElementById('miniatures');
+            const allImages = bien.images && bien.images.length > 1 ? bien.images : null;
+            if (allImages) {
+                allImages.forEach((imgSrc, i) => {
+                    const mini = document.createElement('img');
+                    mini.src = imgSrc;
+                    mini.alt = `Photo ${i + 1}`;
+                    if (i === 0) mini.classList.add('active');
+                    mini.addEventListener('click', () => {
+                        mainImg.src = imgSrc;
+                        document.querySelectorAll('.miniatures img').forEach(m => m.classList.remove('active'));
+                        mini.classList.add('active');
+                    });
+                    miniaturesDiv.appendChild(mini);
+                });
+            }
+
+        } else {
+            document.getElementById('bien-detail').innerHTML = "<p style='padding:40px;text-align:center;'>Location introuvable.</p>";
+        }
+    })
+    .catch(() => {
+        document.getElementById('bien-detail').innerHTML = "<p style='padding:40px;text-align:center;'>Erreur lors du chargement.</p>";
+    });
+</script>
+
+<!-- NAVBAR SCRIPT -->
+<script>
+const hamburger = document.querySelector(".hamburger");
+const menu = document.querySelector(".menu");
+hamburger.addEventListener("click", () => {
+    menu.classList.toggle("active");
+    hamburger.classList.toggle("open");
+});
+</script>
+
+<!-- CAROUSEL SCRIPT -->
+<script>
+function initCarousel(containerId, jsonFile, linkPrefix) {
+    const container = document.getElementById(containerId);
+    const track = container.querySelector('.biens-grid');
+    const prev = container.querySelector('.prev');
+    const next = container.querySelector('.next');
+
+    fetch(jsonFile)
+        .then(res => res.json())
+        .then(items => {
+            track.innerHTML = "";
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.classList.add('bien-card');
+                card.onclick = () => window.location.href = `${linkPrefix}.html?index=${index}`;
+
+                let badge = "";
+                if (item.statut === "disponible") badge = '<span class="badge vente">Disponible</span>';
+                else if (item.statut === "réservé") badge = '<span class="badge offre">Réservé</span>';
+                else if (item.statut === "loué")    badge = '<span class="badge vendu">Loué</span>';
+
+                card.innerHTML = `
+                    <div class="image-container">
+                        <img src="${item.image}" alt="${item.titre}">
+                        ${badge}
+                    </div>
+                    <div class="bien-info">
+                        <h4>${item.titre}</h4>
+                        <p class="prix">${item.prix}</p>
+                    </div>`;
+                track.appendChild(card);
+            });
+        })
+        .catch(err => console.error(`Erreur chargement ${jsonFile}:`, err));
+
+    prev.addEventListener('click', () => {
+        const cardWidth = track.querySelector('.bien-card')?.offsetWidth + 20 || 320;
+        track.scrollBy({ left: -cardWidth * 3, behavior: 'smooth' });
+    });
+    next.addEventListener('click', () => {
+        const cardWidth = track.querySelector('.bien-card')?.offsetWidth + 20 || 320;
+        track.scrollBy({ left: cardWidth * 3, behavior: 'smooth' });
+    });
+}
+
+initCarousel('locations-carousel', 'locations.json', 'location');
+</script>
+
+</body>
+</html>

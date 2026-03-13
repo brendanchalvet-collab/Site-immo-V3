@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estimation - KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>(function(){ emailjs.init("YOUR_PUBLIC_KEY"); })();</script>
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.estimation-section {
+    max-width: 780px;
+    margin: 120px auto 100px auto;
+    padding: 0 24px;
+}
+
+/* ---- Titre ---- */
+.estimation-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    margin: 0 0 10px 0;
+    letter-spacing: 0.02em;
+}
+
+.estimation-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0 40px 0;
+}
+
+/* ---- Card formulaire ---- */
+.estimation-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    animation: fadeUp 0.6s ease both;
+}
+
+.estimation-card-header {
+    padding: 20px 28px 14px 28px;
+    border-bottom: 1px solid #f0ede5;
+}
+
+.estimation-card-header p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    margin: 0;
+}
+
+.estimation-form {
+    padding: 28px 28px 32px 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grille 2 colonnes */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-row-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 11px 14px;
+    border: 1px solid #e5e1d8;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: #0D1B3D;
+    background: #fdfcf8;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4AF37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    background: white;
+}
+
+/* Séparateur de section */
+.form-divider {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    margin: 8px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0ede5;
+}
+
+.form-submit {
+    display: inline-block;
+    background: #D4AF37;
+    color: #0D1B3D;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    align-self: flex-start;
+    margin-top: 8px;
+}
+
+.form-submit:hover { background: #b99a2f; }
+
+#formMessage {
+    margin-top: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+}
+
+/* ---- Animations ---- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 650px) {
+    .form-row,
+    .form-row-3 {
+        grid-template-columns: 1fr;
+    }
+    .estimation-form {
+        padding: 24px 20px 28px 20px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="menu">
+
+    <a href="index.html">Accueil</a>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+
+    <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+
+  </div>
+</nav>
+
+<!-- SECTION ESTIMATION -->
+<section class="estimation-section">
+
+    <h1 class="estimation-title">Estimez votre bien</h1>
+    <p class="estimation-subtitle">Estimation gratuite & sans engagement</p>
+
+    <div class="estimation-card">
+     
+        <form class="estimation-form" id="estimationForm">
+
+            <!-- Votre bien -->
+            <p class="form-divider">Votre bien</p>
+
+            <div class="form-group">
+                <label for="adresse">Adresse du bien</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Adresse complète" required>
+            </div>
+
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label for="type">Type de bien</label>
+                    <select id="type" name="type" required>
+                        <option value="">— Sélectionnez —</option>
+                        <option>Maison</option>
+                        <option>Appartement</option>
+                        <option>Studio</option>
+                        <option>Terrain</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="surface">Surface (m²)</label>
+                    <input type="number" id="surface" name="surface" placeholder="Ex : 85" required>
+                </div>
+                <div class="form-group">
+                    <label for="pieces">Nb de pièces</label>
+                    <select id="pieces" name="pieces" required>
+                        <option value="">—</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8 ou plus</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Vos coordonnées -->
+            <p class="form-divider">Vos coordonnées</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="exemple@domaine.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="tel">Téléphone</label>
+                    <input type="tel" id="tel" name="tel" placeholder="06 00 00 00 00" required>
+                </div>
+            </div>
+
+            <button type="submit" class="form-submit">Envoyer la demande</button>
+            <div id="formMessage"></div>
+
+        </form>
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script>
+
+// =============================
+// FORMULAIRE ESTIMATION
+// =============================
+
+const form = document.getElementById("estimationForm");
+const msg = document.getElementById("formMessage");
+
+form.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const fields = [
+        "nom",
+        "prenom",
+        "email",
+        "tel",
+        "adresse",
+        "surface",
+        "pieces",
+        "type"
+    ];
+
+    let valid = true;
+
+    fields.forEach(id => {
+
+        const input = document.getElementById(id);
+
+        if (!input.value.trim()) {
+            input.style.borderColor = "#dc3545";
+            valid = false;
+        } else {
+            input.style.borderColor = "#e5e1d8";
+        }
+
+    });
+
+    if (!valid) {
+        msg.style.color = "#dc3545";
+        msg.textContent = "Veuillez remplir tous les champs.";
+        return;
+    }
+
+    // =============================
+    // ENVOI EMAILJS
+    // =============================
+
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        nom: form.nom.value,
+        prenom: form.prenom.value,
+        email: form.email.value,
+        tel: form.tel.value,
+        adresse: form.adresse.value,
+        surface: form.surface.value,
+        pieces: form.pieces.value,
+        type: form.type.value
+    })
+
+    .then(() => {
+
+        msg.style.color = "green";
+        msg.textContent = "✓ Votre demande a bien été envoyée.";
+
+        form.reset();
+
+    })
+
+    .catch((error) => {
+
+        console.error(error);
+
+        msg.style.color = "#dc3545";
+        msg.textContent = "Une erreur est survenue, veuillez réessayer.";
+
+    });
+
+});
+
+
+// =============================
+// MENU MOBILE
+// =============================
+
+const hamburger = document.querySelector(".hamburger");
+const menu = document.querySelector(".menu");
+
+hamburger.addEventListener("click", () => {
+
+    hamburger.classList.toggle("open");
+    menu.classList.toggle("active");
+
+});
+
+</script>
+
+</body>
+</html>

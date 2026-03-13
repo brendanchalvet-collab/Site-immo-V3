@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achat / Vente - KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+/* ============================= */
+/* Styles spécifiques à vente.html */
+/* ============================= */
+
+.gestion-cta {
+    text-align: center;
+    padding: 50px 24px 70px 24px;
+    border-top: 1px solid #ece9e0;
+    background: white;
+}
+
+.gestion-cta p {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #555;
+    margin-bottom: 22px;
+}
+
+.gestion-cta a {
+    display: inline-block;
+    background: #D4AF37;
+    color: #0D1B3D;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.gestion-cta a:hover { background: #b99a2f; }
+
+.av-intro {
+    max-width: 780px;
+    margin: 120px auto 0 auto;
+    padding: 60px 24px 50px 24px;
+    text-align: center;
+}
+
+.av-intro h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+}
+
+.av-intro p {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #555;
+    line-height: 1.8;
+}
+
+.av-services {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 70px 24px;
+}
+
+.av-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.av-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.6s ease both;
+}
+
+.av-card:nth-child(2) { animation-delay: 0.08s; }
+.av-card:nth-child(3) { animation-delay: 0.16s; }
+
+.av-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 45px rgba(13, 27, 61, 0.12);
+}
+
+.av-card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+}
+
+.av-card-body {
+    padding: 22px 24px 26px 24px;
+}
+
+.av-card-body h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 10px;
+}
+
+.av-card-body p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #666;
+    line-height: 1.7;
+}
+
+.av-biens {
+    background: white;
+    border-top: 1px solid #ece9e0;
+    padding: 70px 24px;
+}
+
+.av-biens-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.av-biens-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.biens-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.bien-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.bien-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 45px rgba(13, 27, 61, 0.12);
+}
+
+.bien-card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    display: block;
+}
+
+.bien-info {
+    padding: 18px 20px 22px 20px;
+}
+
+.bien-info h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 8px;
+}
+
+.prix {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #D4AF37;
+}
+
+.badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-radius: 20px;
+    text-transform: uppercase;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.badge.vente     { background: rgba(13, 27, 61, 0.85);  color: white; }
+.badge.offre     { background: rgba(212, 175, 55, 0.9);  color: #0D1B3D; }
+.badge.compromis { background: rgba(139, 90, 43, 0.88);  color: white; }
+.badge.vendu     { background: rgba(0, 0, 0, 0.6);       color: white; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 992px) {
+    .av-services-grid { grid-template-columns: repeat(2, 1fr); }
+    .biens-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .av-services-grid { grid-template-columns: 1fr; }
+    .biens-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR identique à index.html -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+    <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+  </div>
+</nav>
+
+<!-- INTRO -->
+<section class="av-intro">
+    <h1>Vente de votre bien</h1>
+    <p>Nous vous accompagnons à chaque étape de votre projet immobilier, de l'estimation à la signature, avec expertise et transparence.</p>
+</section>
+
+<!-- ACCOMPAGNEMENT -->
+<section class="av-services">
+    <div class="av-services-grid">
+
+        <div class="av-card">
+            <img src="images/achat-vente.jpg" alt="Estimation">
+            <div class="av-card-body">
+                <h3>Estimation du bien</h3>
+                <p>Une estimation précise et fiable pour définir le juste prix de votre bien.</p>
+            </div>
+        </div>
+
+        <div class="av-card">
+            <img src="images/visites.png" alt="Diffusion">
+            <div class="av-card-body">
+                <h3>Diffusion des annonces</h3>
+                <p>Nous diffusons votre bien sur les plateformes les plus pertinentes pour toucher un large public.</p>
+            </div>
+        </div>
+
+        <div class="av-card">
+            <img src="images/signature.jpg" alt="Négociation">
+            <div class="av-card-body">
+                <h3>Visites & Négociation</h3>
+                <p>Nous gérons les visites et négocions pour obtenir les meilleures conditions pour vous.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- MID BANNER -->
+<div class="mid-banner">
+    <div class="mid-banner-inner">
+        <h2>Un projet de <em>vente ?</em></h2>
+        <a href="contact.html">Nous contacter</a>
+    </div>
+</div>
+
+<!-- BIENS EN VENTE -->
+<section class="av-biens">
+    <div class="av-biens-inner">
+        <h2 class="av-biens-title">Biens que nous accompagnons</h2>
+        <div class="biens-grid" id="vente-grid"></div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script>
+function afficherBiens(jsonFile, containerId, linkPrefix) {
+    const container = document.getElementById(containerId);
+
+    fetch(jsonFile)
+        .then(res => res.json())
+        .then(items => {
+            container.innerHTML = "";
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.classList.add('bien-card');
+                card.onclick = () => window.location.href = `${linkPrefix}.html?index=${index}`;
+
+                let badgeHTML = "";
+                if (item.statut === "en vente")        badgeHTML = '<span class="badge vente">En vente</span>';
+                else if (item.statut === "sous offre")  badgeHTML = '<span class="badge offre">Sous offre</span>';
+                else if (item.statut === "sous compromis") badgeHTML = '<span class="badge compromis">Sous compromis</span>';
+                else if (item.statut === "vendu")       badgeHTML = '<span class="badge vendu">Vendu</span>';
+
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.titre}">
+                    ${badgeHTML}
+                    <div class="bien-info">
+                        <h4>${item.titre}</h4>
+                        <p class="prix">${item.prix}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        })
+        .catch(err => console.error(`Erreur chargement ${jsonFile}:`, err));
+}
+
+afficherBiens('biens.json', 'vente-grid', 'bien');
+
+document.querySelectorAll(".nav-dropdown-trigger").forEach(trigger => {
+    trigger.addEventListener("click", () => {
+        trigger.nextElementSibling.classList.toggle("active");
+    });
+});
+
+const hamburger = document.querySelector(".hamburger");
+const menu = document.querySelector(".menu");
+hamburger.addEventListener("click", () => {
+    menu.classList.toggle("active");
+    hamburger.classList.toggle("open");
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Espace — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<style>
+/* ===== GLOBAL ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Jost', sans-serif; }
+body { min-height: 100vh; background: #f5f4f0; display: flex; flex-direction: column; }
+
+/* ===== NAVBAR ===== */
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: #0D1B3D; color: white; position: sticky; top: 0; z-index: 100; }
+.navbar .logo img { height: 48px; }
+.navbar .menu { display: flex; align-items: center; gap: 16px; }
+.navbar a { color: white; text-decoration: none; font-weight: 500; }
+.navbar a#btn-logout { color: #D4AF37; font-weight: 600; cursor: pointer; }
+.nav-dropdown-wrap { position: relative; }
+.nav-dropdown { display: none; position: absolute; top: 100%; left: 0; background: white; color: #0D1B3D; min-width: 160px; border-radius: 6px; overflow: hidden; }
+.nav-dropdown a { display: block; padding: 10px 14px; color: #0D1B3D; font-weight: 400; }
+.nav-dropdown a:hover { background: #f0ede6; }
+.nav-dropdown-trigger { cursor: pointer; }
+.nav-dropdown-wrap:hover .nav-dropdown { display: block; }
+
+/* ===== HERO ===== */
+.client-hero { background: #0D1B3D; padding: 40px 24px; text-align: center; color: white; }
+.client-welcome { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.22em; color: #D4AF37; margin-bottom: 8px; }
+.client-hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 400; }
+.client-hero h1 em { font-style: italic; color: #D4AF37; margin-left: 6px; }
+.client-tabs { display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.client-tab { background: none; border: none; color: rgba(255,255,255,0.6); padding: 8px 16px; cursor: pointer; font-weight: 500; font-size: 0.88rem; border-bottom: 2px solid transparent; transition: 0.2s; }
+.client-tab.active { color: #D4AF37; border-bottom: 2px solid #D4AF37; }
+
+/* ===== MAIN ===== */
+.client-main { flex: 1; padding: 40px 24px; }
+.client-main-inner { max-width: 1100px; margin: 0 auto; }
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp 0.4s ease forwards; }
+
+/* FAVORIS GRID */
+.favoris-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.favori-card { background: white; border-radius: 16px; border: 1px solid #ece9e0; box-shadow: 0 8px 30px rgba(13,27,61,0.06); overflow: hidden; position: relative; transition: transform 0.3s, box-shadow 0.3s; }
+.favori-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(13,27,61,0.11); }
+.favori-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+.favori-card-body { padding: 16px 18px 18px; }
+.favori-card-body h4 { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #0D1B3D; margin-bottom: 4px; }
+.favori-card-body .prix { color: #D4AF37; margin-bottom: 12px; font-weight: 500; }
+.favori-card-footer { display: flex; justify-content: space-between; align-items: center; }
+.btn-voir { font-size: 0.78rem; color: #0D1B3D; text-decoration: none; border: 1px solid #0D1B3D; padding: 6px 14px; border-radius: 6px; transition: 0.2s; text-transform: uppercase; }
+.btn-voir:hover { background: #0D1B3D; color: white; }
+.btn-retirer { background: none; border: none; cursor: pointer; color: #ccc; font-size: 18px; }
+.btn-retirer:hover { color: #c0392b; }
+.favori-badge { position: absolute; top: 10px; left: 10px; padding: 4px 10px; font-size: 0.68rem; border-radius: 20px; text-transform: uppercase; font-weight: 500; }
+.favori-badge.vente { background: rgba(13,27,61,0.85); color: white; }
+.favori-badge.offre { background: rgba(212,175,55,0.9); color: #0D1B3D; }
+.favori-badge.vendu { background: rgba(0,0,0,0.6); color: white; }
+
+/* ALERTES */
+.alertes-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+.alerte-card { background: white; border-radius: 14px; border: 1px solid #ece9e0; padding: 20px; display: flex; justify-content: space-between; transition: box-shadow 0.2s; }
+.alerte-card:hover { box-shadow: 0 6px 24px rgba(13,27,61,0.08); }
+.alerte-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.alerte-tag { font-size: 0.7rem; font-weight: 500; padding: 3px 10px; border-radius: 20px; background: #f0ede6; color: #666; }
+.alerte-tag.region { background: rgba(13,27,61,0.08); color: #0D1B3D; }
+.alerte-tag.prix { background: rgba(212,175,55,0.15); color: #8a6f1a; }
+.alerte-tag.type { background: #f0f4ff; color: #3a5a9a; }
+
+/* Formulaire alerte */
+.alerte-form-card { background: white; border-radius: 16px; border: 1px solid #ece9e0; padding: 24px; position: sticky; top: 92px; }
+.alerte-form-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; font-weight: 400; color: #0D1B3D; margin-bottom: 4px; }
+.form-field { margin-bottom: 14px; }
+.form-field label { font-size: 0.7rem; color: #666; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.1em; }
+.form-field input, .form-field select { width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #e0ddd6; font-size: 0.85rem; outline: none; }
+.form-field input:focus, .form-field select:focus { border-color: #D4AF37; box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-add-alerte { width: 100%; padding: 11px; background: #0D1B3D; color: white; border-radius: 8px; text-transform: uppercase; font-weight: 600; cursor: pointer; margin-top: 6px; }
+.btn-add-alerte:hover { background: #1F3A73; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 30px; right: 30px; background: #0D1B3D; color: white; padding: 14px 20px; border-radius: 10px; border-left: 3px solid #D4AF37; opacity: 0; transform: translateY(80px); transition: 0.3s; z-index: 999; max-width: 320px; }
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ANIMATION */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE */
+@media(max-width:900px) { .alertes-layout { grid-template-columns: 1fr; } .alerte-form-card { position: static; } }
+@media(max-width:600px) { .form-row { grid-template-columns: 1fr; } .favoris-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo"><a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a></div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+    <div class="nav-dropdown-wrap">
+      <a href="locations.html" class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+    <a href="#" class="nav-espace-client" id="nav-user-btn">Espace client</a>
+    <a href="#" id="btn-logout">Se déconnecter</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="client-hero">
+  <p class="client-welcome">Espace personnel</p>
+  <h1>Bonjour, <em id="prenom-hero">—</em></h1>
+  <div class="client-tabs">
+    <button class="client-tab active" onclick="switchTab('favoris')" id="tab-favoris">
+      Mes favoris <span class="tab-count" id="count-favoris">0</span>
+    </button>
+    <button class="client-tab" onclick="switchTab('alertes')" id="tab-alertes">
+      Mes alertes <span class="tab-count" id="count-alertes">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="client-main">
+  <div class="client-main-inner">
+    <!-- FAVORIS -->
+    <div class="panel active" id="panel-favoris">
+      <div id="favoris-container"><div class="loading">Chargement...</div></div>
+    </div>
+
+    <!-- ALERTES -->
+    <div class="panel" id="panel-alertes">
+      <div class="alertes-layout">
+        <div><div id="alertes-container"><div class="loading">Chargement...</div></div></div>
+        <div class="alerte-form-card">
+          <h3>Nouvelle alerte</h3>
+          <div class="form-field"><label>Région</label>
+            <select id="alerte-region"><option value="">Toutes les régions</option><option value="Bretagne">Bretagne</option><option value="Côte d'Azur">Côte d'Azur</option></select>
+          </div>
+          <div class="form-field"><label>Type de bien</label>
+            <select id="alerte-type"><option value="">Tous types</option><option value="Maison">Maison</option><option value="Appartement">Appartement</option><option value="Terrain">Terrain</option><option value="Villa">Villa</option></select>
+          </div>
+          <div class="form-field"><label>Transaction</label>
+            <select id="alerte-transaction"><option value="Achat">Achat</option><option value="Location">Location</option></select>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><label>Budget min (€)</label><input type="number" id="alerte-min" min="0"></div>
+            <div class="form-field"><label>Budget max (€)</label><input type="number" id="alerte-max" min="0"></div>
+          </div>
+          <button class="btn-add-alerte" onclick="ajouterAlerte()">+ Créer l'alerte</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-light">
+    <div class="footer-column">
+      <p><strong>L'AGENCE</strong></p>
+      <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+      <p><a href="contact.html">Nous contacter</a></p>
+      <p><a href="presentation.html">Présentation</a></p>
+    </div>
+    <div class="footer-column">
+      <p><strong>Nos services</strong></p>
+      <p><a href="achat.html">Biens à vendre</a></p>
+      <p><a href="locations.html">Biens à louer</a></p>
+      <p><a href="vente.html">Vente</a></p>
+      <p><a href="gestion.html">Gestion locative</a></p>
+      <p><a href="estimation.html">Estimation</a></p>
+    </div>
+    <div class="footer-column">
+      <p><strong>Liens utiles</strong></p>
+      <p><a href="honoraires.html">Nos honoraires</a></p>
+      <p><a href="mentions-legales.html">Mentions légales</a></p>
+      <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+    </div>
+  </div>
+  <div class="footer-top">
+    <div class="socials">
+      <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+      <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 KELO'ESTATE</p>
+  </div>
+</footer>
+
+<!-- ===== FIREBASE + JS ===== -->
+<script>
+// FIREBASE CONFIG
+const firebaseConfig = { apiKey:"AIzaSyBlrPa4c7Hl7CY5EY5ssLwsLqMbOGL7v6k", authDomain:"keloestate.firebaseapp.com", projectId:"keloestate", storageBucket:"keloestate.firebasestorage.app", messagingSenderId:"510035287199", appId:"1:510035287199:web:2c1d6bb108b923837256aa" };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(); 
+const db = firebase.firestore();
+let currentUser = null;
+
+// AUTH
+auth.onAuthStateChanged(user => {
+  if (!user) return window.location.href = 'login.html';
+  currentUser = user;
+  const prenom = (user.displayName || user.email).split(' ')[0];
+  document.getElementById('prenom-hero').textContent = prenom;
+  chargerFavoris(); 
+  chargerAlertes();
+});
+
+// TABS
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.client-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// FAVORIS
+function chargerFavoris() {
+  const container = document.getElementById('favoris-container');
+  db.collection('users').doc(currentUser.uid).collection('favoris').orderBy('ajouteLe','desc').onSnapshot(snap=>{
+    document.getElementById('count-favoris').textContent = snap.size;
+    if(snap.empty){container.innerHTML='<div class="empty-state"><div class="empty-icon">♡</div><h3>Aucun favori pour l\'instant</h3></div>'; return;}
+    container.innerHTML='<div class="favoris-grid"></div>'; 
+    const grid = container.querySelector('.favoris-grid');
+    snap.forEach(doc=>{
+      const b=doc.data(); 
+      const badge = b.statut==='sous offre'?'<span class="favori-badge offre">Sous offre</span>':b.statut==='vendu'?'<span class="favori-badge vendu">Vendu</span>':'<span class="favori-badge vente">En vente</span>';
+      const card=document.createElement('div'); 
+      card.className='favori-card'; 
+      card.innerHTML=`<img src="${b.image||'images/achat-vente.jpg'}" alt="${b.titre}">${badge}<div class="favori-card-body"><h4>${b.titre}</h4><p class="prix">${b.prix}</p><div class="favori-card-footer"><a href="bien.html?index=${b.index}" class="btn-voir">Voir le bien</a><button class="btn-retirer" onclick="retirerFavori('${doc.id}')">✕</button></div></div>`;
+      grid.appendChild(card);
+    });
+  });
+}
+function retirerFavori(id){
+  db.collection('users').doc(currentUser.uid).collection('favoris').doc(id).delete().then(()=>showToast('Bien retiré des favoris'));
+}
+
+// ALERTES
+function chargerAlertes(){
+  const container = document.getElementById('alertes-container');
+  db.collection('users').doc(currentUser.uid).collection('alertes').orderBy('date','desc').onSnapshot(snap=>{
+    document.getElementById('count-alertes').textContent = snap.size;
+    if(snap.empty){container.innerHTML='<div class="empty-state"><div class="empty-icon">⚡</div><h3>Aucune alerte créée</h3></div>'; return;}
+    container.innerHTML=''; 
+    snap.forEach(doc=>{
+      const a=doc.data(); 
+      const tags=[];
+      if(a.region)tags.push(`<span class="alerte-tag region">${a.region}</span>`);
+      if(a.type)tags.push(`<span class="alerte-tag type">${a.type}</span>`);
+      if(a.min||a.max)tags.push(`<span class="alerte-tag prix">${a.min||0}–${a.max||"∞"}€</span>`);
+      const card=document.createElement('div'); 
+      card.className='alerte-card'; 
+      card.innerHTML=`<div><strong>${a.transaction}</strong>${tags.join('')}</div><button class="btn-retirer" onclick="supprimerAlerte('${doc.id}')">✕</button>`;
+      container.appendChild(card);
+    });
+  });
+}
+function ajouterAlerte(){
+  const region=document.getElementById('alerte-region').value, type=document.getElementById('alerte-type').value, transaction=document.getElementById('alerte-transaction').value, min=document.getElementById('alerte-min').value, max=document.getElementById('alerte-max').value;
+  db.collection('users').doc(currentUser.uid).collection('alertes').add({region,type,transaction,min,max,date:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>showToast('Alerte créée !'));
+}
+function supprimerAlerte(id){
+  db.collection('users').doc(currentUser.uid).collection('alertes').doc(id).delete().then(()=>showToast('Alerte supprimée'));
+}
+
+// TOAST
+function showToast(msg){const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>{t.classList.remove('show');},2800);}
+
+// DECONNEXION
+document.getElementById('btn-logout').addEventListener('click', () => {
+  auth.signOut().then(() => {
+    showToast('Déconnecté avec succès !');
+    setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+  }).catch(err => {
+    showToast('Erreur lors de la déconnexion');
+    console.error(err);
+  });
+});
+
+// NAVBAR HAMBURGER RESPONSIVE
+const hamburger = document.createElement('div'); 
+hamburger.className='hamburger'; 
+hamburger.innerHTML='<span></span><span></span><span></span>'; 
+document.querySelector('.navbar').appendChild(hamburger);
+hamburger.addEventListener('click',()=>{document.querySelector('.menu').classList.toggle('open'); hamburger.classList.toggle('active');});
+</script>
+
+</body>
+</html>

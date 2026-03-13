@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Agence Immobilière Bretagne et Côte d'Azur</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.contact-section {
+    max-width: 1000px;
+    margin: 120px auto 100px auto;
+    padding: 0 24px;
+}
+
+/* ---- Titre ---- */
+.contact-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    margin: 0 0 10px 0;
+    letter-spacing: 0.02em;
+}
+
+.contact-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0 52px 0;
+}
+
+/* ---- Layout deux colonnes ---- */
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+    align-items: start;
+}
+
+/* ========= COLONNE GAUCHE ========= */
+.contact-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card coordonnées */
+.info-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    animation: fadeUp 0.6s ease both;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 28px;
+    border-bottom: 1px solid #f0ede5;
+    transition: background 0.2s;
+}
+
+.info-row:last-child { border-bottom: none; }
+.info-row:hover { background: #fdfcf8; }
+
+.info-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-icon svg {
+    stroke: #D4AF37;
+    fill: none;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    width: 22px;
+    height: 22px;
+}
+
+.info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.info-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    font-weight: 500;
+}
+
+.info-value {
+    font-family: 'Jost', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: #0D1B3D;
+    line-height: 1.6;
+}
+
+.info-value a {
+    color: #0D1B3D;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.info-value a:hover { color: #D4AF37; }
+
+/* Card horaires */
+.schedule-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.05s ease both;
+}
+
+.schedule-header {
+    padding: 20px 28px 14px 28px;
+    border-bottom: 1px solid #f0ede5;
+}
+
+.schedule-header-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    margin: 0;
+}
+
+.schedule-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 28px;
+    border-bottom: 1px solid #f0ede5;
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #0D1B3D;
+    transition: background 0.2s;
+}
+
+.schedule-row:last-child { border-bottom: none; }
+.schedule-row:hover { background: #fdfcf8; }
+
+.schedule-day { font-weight: 400; }
+.schedule-hours { color: #666; }
+.schedule-closed { color: #bbb; font-style: italic; }
+
+/* ========= COLONNE DROITE — Formulaire ========= */
+.contact-form-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.form-header {
+    padding: 20px 28px 14px 28px;
+    border-bottom: 1px solid #f0ede5;
+}
+
+.form-header-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    margin: 0;
+}
+
+.contact-form {
+    padding: 24px 28px 28px 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 11px 14px;
+    border: 1px solid #e5e1d8;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: #0D1B3D;
+    background: #fdfcf8;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    background: white;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.form-submit {
+    display: inline-block;
+    background: #D4AF37;
+    color: #0D1B3D;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    align-self: flex-start;
+    margin-top: 4px;
+}
+
+.form-submit:hover { background: #b99a2f; }
+
+#formMessage {
+    margin-top: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+}
+
+/* ========= MAP ========= */
+.map-card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    position: relative;
+    animation: fadeUp 0.6s 0.15s ease both;
+}
+
+.map-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    z-index: 10;
+}
+
+.map-badge-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.map-badge-address {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    line-height: 1.4;
+}
+
+.contact-map {
+    width: 100%;
+    height: 380px;
+    border: 0;
+    display: block;
+    filter: saturate(0.7) contrast(1.05);
+    transition: filter 0.3s;
+}
+
+.map-card:hover .contact-map {
+    filter: saturate(1) contrast(1.05);
+}
+
+/* ---- Animations ---- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 750px) {
+    .contact-layout {
+        grid-template-columns: 1fr;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+    <div class="nav-dropdown-wrap">
+      <a href="locations.html" class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+    <a href="espace-client.html" class="nav-espace-client" id="nav-user-btn">Espace client</a>
+  </div>
+</nav>
+
+<!-- SECTION CONTACT -->
+<section class="contact-section">
+
+    <h2 class="contact-title">Nous contacter</h2>
+
+    <div class="contact-layout">
+
+        <!-- COLONNE GAUCHE -->
+        <div class="contact-left">
+
+            <!-- Coordonnées -->
+            <div class="info-card">
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Adresse</span>
+                        <span class="info-value">2 Place de la Gare du Sud<br>06000 Nice</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Téléphone</span>
+                        <span class="info-value"><a href="tel:+33612345678">+33 6 12 34 56 78</a></span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="info-text">
+                        <span class="info-label">Email</span>
+                        <span class="info-value"><a href="mailto:contact@keloestate.fr">contact@keloestate.fr</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Horaires -->
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <p class="schedule-header-label">Horaires d'ouverture</p>
+                </div>
+                <div class="schedule-row"><span class="schedule-day">Lundi</span><span class="schedule-hours">9h00 – 18h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Mardi</span><span class="schedule-hours">9h00 – 18h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Mercredi</span><span class="schedule-hours">9h00 – 18h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Jeudi</span><span class="schedule-hours">9h00 – 18h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Vendredi</span><span class="schedule-hours">9h00 – 18h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Samedi</span><span class="schedule-hours">10h00 – 14h00</span></div>
+                <div class="schedule-row"><span class="schedule-day">Dimanche</span><span class="schedule-closed">Fermé</span></div>
+            </div>
+
+        </div>
+
+        <!-- COLONNE DROITE — Formulaire -->
+        <div class="contact-form-card">
+            <div class="form-header">
+                <p class="form-header-label">Envoyer un message</p>
+            </div>
+            <form class="contact-form" id="contactForm">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="exemple@domaine.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Téléphone</label>
+                        <input type="tel" id="tel" name="tel" placeholder="06 00 00 00 00" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Votre message..." required></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">Envoyer</button>
+                <div id="formMessage"></div>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- MAP pleine largeur -->
+    <div class="map-card">
+        <!-- <div class="map-badge">
+            <span class="map-badge-label">Notre agence</span>
+            <span class="map-badge-address">2 Place de la Gare du Sud<br>06000 Nice</span>
+        </div> -->
+        <iframe
+            class="contact-map"
+            src="https://www.google.com/maps?q=2+Place+de+la+Gare+du+Sud,+06000+NICE&output=embed"
+            allowfullscreen=""
+            loading="lazy">
+        </iframe>
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script>
+
+// =============================
+// FORMULAIRE CONTACT
+// =============================
+
+const contactForm = document.getElementById("contactForm");
+
+if (contactForm) {
+
+    contactForm.addEventListener("submit", function(e) {
+
+        e.preventDefault();
+
+        const fields = ["nom", "prenom", "email", "tel", "message"];
+        let valid = true;
+
+        fields.forEach(id => {
+
+            const input = document.getElementById(id);
+
+            if (!input.value.trim()) {
+
+                input.style.borderColor = "#dc3545";
+                valid = false;
+
+            } else {
+
+                input.style.borderColor = "#e5e1d8";
+
+            }
+
+        });
+
+        const messageBox = document.getElementById("formMessage");
+
+        if (!valid) {
+
+            messageBox.style.color = "#dc3545";
+            messageBox.textContent = "Veuillez remplir tous les champs.";
+            return;
+
+        }
+
+        // simulation envoi (à remplacer par EmailJS ou backend)
+        messageBox.style.color = "green";
+        messageBox.textContent = "✓ Merci ! Votre message a bien été envoyé.";
+
+        contactForm.reset();
+
+    });
+
+}
+
+
+// =============================
+// MENU MOBILE
+// =============================
+
+const hamburger = document.querySelector(".hamburger");
+const menu = document.querySelector(".menu");
+
+if (hamburger && menu) {
+
+    hamburger.addEventListener("click", () => {
+
+        hamburger.classList.toggle("open");
+        menu.classList.toggle("active");
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

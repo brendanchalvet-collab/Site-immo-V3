@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail du bien — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+
+/* ============================= */
+/* BIEN DETAIL                   */
+/* ============================= */
+
+.bien-container {
+  margin-top: 100px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px 24px 60px;
+}
+
+.bien-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.bien-description-full {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.9;
+}
+
+/* ============================= */
+/* GALERIE                       */
+/* ============================= */
+
+.bien-images {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#main-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(13,27,61,0.12);
+  transition: 0.3s;
+}
+
+.miniatures {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.miniatures img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s;
+}
+
+.miniatures img:hover,
+.miniatures img.active {
+  border-color: #D4AF37;
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* INFOS BIEN                    */
+/* ============================= */
+
+.bien-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 10px;
+}
+
+.bien-info-panel h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  color: #0D1B3D;
+  line-height: 1.25;
+}
+
+#prix-bien {
+  font-family: 'Jost', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 0.01em;
+}
+
+.bien-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+.bien-badge.vente     { background: rgba(13,27,61,0.85);  color: white; }
+.bien-badge.offre     { background: rgba(212,175,55,0.9);  color: #0D1B3D; }
+.bien-badge.compromis { background: rgba(139,90,43,0.88);  color: white; }
+.bien-badge.vendu     { background: rgba(0,0,0,0.6);       color: white; }
+
+.bien-caracteristiques {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: #f5f4f0;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.carac-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.carac-item span {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #aaa;
+}
+.carac-item strong {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0D1B3D;
+}
+
+.bien-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.contact-btn {
+  padding: 12px 26px;
+  background: #D4AF37;
+  color: #0D1B3D;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.3s;
+}
+.contact-btn:hover { background: #b99a2f; }
+
+.back-btn {
+  padding: 12px 22px;
+  background: transparent;
+  color: #0D1B3D;
+  border: 1.5px solid #d0cdc6;
+  text-decoration: none;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.back-btn:hover { border-color: #0D1B3D; background: #0D1B3D; color: white; }
+
+/* Bouton favori */
+.btn-favori-detail {
+  padding: 12px 20px;
+  background: white;
+  border: 1.5px solid #e0ddd6;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-favori-detail:hover { border-color: #e74c3c; color: #e74c3c; }
+.btn-favori-detail.active { border-color: #e74c3c; color: #e74c3c; }
+
+/* ============================= */
+/* SECTION BIENS RÉCENTS         */
+/* ============================= */
+
+.biens-recents {
+  background: #f5f4f0;
+  padding: 60px 24px 70px;
+}
+
+.biens-recents-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.biens-recents-inner h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  color: #0D1B3D;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.biens-recents-inner h2 em { font-style: italic; color: #D4AF37; }
+
+.carousel-wrapper {
+  position: relative;
+}
+
+.carousel-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Réutilise les styles .bien-card de style.css mais on redéfinit ici si besoin */
+.bien-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #ece9e0;
+  box-shadow: 0 8px 30px rgba(13,27,61,0.07);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  animation: fadeUp 0.5s ease both;
+}
+.bien-card:hover { transform: translateY(-5px); box-shadow: 0 16px 45px rgba(13,27,61,0.12); }
+.bien-card img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.5s; }
+.bien-card:hover img { transform: scale(1.03); }
+.bien-card .card-body { padding: 16px 18px 20px; flex: 1; }
+.bien-card .card-body h4 { font-family: 'DM Serif Display', serif; font-size: 1rem; font-weight: 400; color: #0D1B3D; margin-bottom: 6px; }
+.bien-card .card-body .prix { font-family: 'Jost', sans-serif; font-weight: 600; font-size: 1rem; color: #D4AF37; }
+.bien-card .card-body .meta { font-family: 'Jost', sans-serif; font-size: 0.75rem; color: #aaa; font-weight: 300; margin-bottom: 6px; }
+
+.badge {
+  position: absolute; top: 10px; left: 10px;
+  padding: 4px 10px;
+  font-family: 'Jost', sans-serif; font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.08em; border-radius: 20px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.badge.vente     { background: rgba(13,27,61,0.85);  color: white; }
+.badge.offre     { background: rgba(212,175,55,0.9);  color: #0D1B3D; }
+.badge.compromis { background: rgba(139,90,43,0.88);  color: white; }
+.badge.vendu     { background: rgba(0,0,0,0.6);       color: white; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+/* ============================= */
+/* RESPONSIVE                    */
+/* ============================= */
+
+@media (max-width: 900px) {
+  .carousel-track { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .bien-container { margin-top: 84px; padding: 20px 16px 40px; }
+  .bien-top { grid-template-columns: 1fr; gap: 24px; }
+  #main-img { height: 260px; }
+  .bien-caracteristiques { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .carousel-track { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .bien-caracteristiques { grid-template-columns: 1fr; }
+  .bien-btns { flex-direction: column; }
+  .contact-btn, .back-btn, .btn-favori-detail { text-align: center; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+  <div class="menu">
+    <a href="index.html">Accueil</a>
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+    <div class="nav-dropdown-wrap">
+      <a href="locations.html" class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+    <a href="espace-client.html" class="nav-espace-client" id="nav-user-btn">Espace client</a>
+  </div>
+</nav>
+
+<!-- BIEN DETAIL -->
+<section id="bien-detail" class="bien-container">
+  <div class="bien-top">
+
+    <!-- GALERIE -->
+    <div class="bien-images">
+      <img id="main-img" src="" alt="Image du bien">
+      <div class="miniatures" id="miniatures"></div>
+    </div>
+
+    <!-- INFOS -->
+    <div class="bien-info-panel">
+      <div id="badge-bien"></div>
+      <h2 id="titre-bien"></h2>
+      <p id="prix-bien"></p>
+      <div class="bien-caracteristiques" id="caracteristiques"></div>
+      <div class="bien-btns">
+        <a class="back-btn" href="achat-vente.html">← Retour</a>
+        <button class="btn-favori-detail" id="btn-fav">♡ Ajouter aux favoris</button>
+        <a class="contact-btn" href="contact.html">Contacter l'agence</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DESCRIPTION PLEINE LARGEUR -->
+  <p class="bien-description-full" id="description-bien"></p>
+</section>
+
+<!-- BIENS RÉCENTS -->
+<section class="biens-recents">
+  <div class="biens-recents-inner">
+    <h2>Autres <em>biens</em></h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="carousel-track"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat-vente.html">Achat / Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom"><p>© 2026 KELO'ESTATE</p></div>
+</footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBlrPa4c7Hl7CY5EY5ssLwsLqMbOGL7v6k",
+  authDomain: "keloestate.firebaseapp.com",
+  projectId: "keloestate",
+  storageBucket: "keloestate.firebasestorage.app",
+  messagingSenderId: "510035287199",
+  appId: "1:510035287199:web:2c1d6bb108b923837256aa"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+let currentUser = null;
+let currentBien = null;
+let currentIndex = null;
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  const btn = document.getElementById('nav-user-btn');
+  if (user && btn) {
+    btn.textContent = (user.displayName || user.email).split(' ')[0];
+  }
+  if (currentBien) mettreAJourBoutonFavori();
+});
+
+/* Favori */
+function mettreAJourBoutonFavori() {
+  if (!currentUser || !currentBien) return;
+  const btnFav = document.getElementById('btn-fav');
+  db.collection('users').doc(currentUser.uid).collection('favoris')
+    .where('titre', '==', currentBien.titre).get()
+    .then(snap => {
+      const isFav = !snap.empty;
+      btnFav.textContent = isFav ? '♥ Retirer des favoris' : '♡ Ajouter aux favoris';
+      btnFav.classList.toggle('active', isFav);
+    });
+}
+
+document.getElementById('btn-fav').addEventListener('click', () => {
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+  const ref = db.collection('users').doc(currentUser.uid).collection('favoris');
+  ref.where('titre', '==', currentBien.titre).get().then(snap => {
+    if (!snap.empty) {
+      snap.forEach(d => d.ref.delete());
+    } else {
+      ref.add({
+        titre: currentBien.titre,
+        prix:  currentBien.prix,
+        image: currentBien.image || '',
+        statut: currentBien.statut || '',
+        index: currentIndex,
+        ajouteLe: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    setTimeout(mettreAJourBoutonFavori, 500);
+  });
+});
+
+/* Chargement du bien */
+fetch('biens.json')
+  .then(res => res.json())
+  .then(biens => {
+    const params = new URLSearchParams(window.location.search);
+    currentIndex  = parseInt(params.get('index'));
+    const bien    = biens[currentIndex];
+    currentBien   = bien;
+
+    if (!bien) {
+      document.getElementById('bien-detail').innerHTML = "<p style='padding:60px;text-align:center;color:#aaa;font-family:Jost,sans-serif;'>Bien introuvable.</p>";
+      return;
+    }
+
+    /* Image principale */
+    const mainImg  = document.getElementById('main-img');
+    const firstImg = bien.images ? bien.images[0] : bien.image;
+    mainImg.src    = firstImg || 'images/achat-vente.jpg';
+    mainImg.alt    = bien.titre;
+
+    /* Titre & prix */
+    document.getElementById('titre-bien').innerText   = bien.titre;
+    document.getElementById('prix-bien').innerText    = bien.prix;
+    document.getElementById('description-bien').innerText = bien.description || '';
+
+    /* Badge statut */
+    const statutMap = {
+      "en vente":       { cls: "vente",     label: "En vente" },
+      "sous offre":     { cls: "offre",     label: "Sous offre" },
+      "sous compromis": { cls: "compromis", label: "Sous compromis" },
+      "vendu":          { cls: "vendu",     label: "Vendu" }
+    };
+    if (bien.statut && statutMap[bien.statut]) {
+      const s = statutMap[bien.statut];
+      document.getElementById('badge-bien').innerHTML =
+        `<span class="bien-badge ${s.cls}">${s.label}</span>`;
+    }
+
+    /* Caractéristiques */
+    const caracDiv = document.getElementById('caracteristiques');
+    const caracs = [
+      { label: "Surface",  value: bien.surface  ? bien.surface + " m²" : null },
+      { label: "Pièces",   value: bien.pieces   ? bien.pieces + " pièces" : null },
+      { label: "Chambres", value: bien.chambres ? bien.chambres + " ch." : null },
+      { label: "Ville",    value: bien.ville    || null },
+      { label: "Type",     value: bien.type     || null },
+      { label: "DPE",      value: bien.dpe      || null },
+    ];
+    caracs.forEach(c => {
+      if (c.value) {
+        caracDiv.innerHTML += `
+          <div class="carac-item">
+            <span>${c.label}</span>
+            <strong>${c.value}</strong>
+          </div>`;
+      }
+    });
+    if (caracDiv.children.length === 0) caracDiv.style.display = 'none';
+
+    /* Miniatures */
+    const minDiv   = document.getElementById('miniatures');
+    const allImgs  = bien.images && bien.images.length > 1 ? bien.images : null;
+    if (allImgs) {
+      allImgs.forEach((src, i) => {
+        const mini = document.createElement('img');
+        mini.src   = src;
+        mini.alt   = `Photo ${i + 1}`;
+        if (i === 0) mini.classList.add('active');
+        mini.addEventListener('click', () => {
+          mainImg.src = src;
+          document.querySelectorAll('.miniatures img').forEach(m => m.classList.remove('active'));
+          mini.classList.add('active');
+        });
+        minDiv.appendChild(mini);
+      });
+    }
+
+    /* Autres biens */
+    const track = document.getElementById('carousel-track');
+    const autres = biens
+      .map((b, i) => ({ b, i }))
+      .filter(({ i }) => i !== currentIndex)
+      .slice(0, 6);
+
+    autres.forEach(({ b, i }) => {
+      let badge = '';
+      if (b.statut === 'en vente')       badge = '<span class="badge vente">En vente</span>';
+      else if (b.statut === 'sous offre') badge = '<span class="badge offre">Sous offre</span>';
+      else if (b.statut === 'sous compromis') badge = '<span class="badge compromis">Sous compromis</span>';
+      else if (b.statut === 'vendu')      badge = '<span class="badge vendu">Vendu</span>';
+
+      const meta = [b.ville, b.surface ? b.surface + ' m²' : null, b.pieces ? b.pieces + ' pièces' : null]
+        .filter(Boolean).join(' · ');
+
+      const card = document.createElement('div');
+      card.className = 'bien-card';
+      card.innerHTML = `
+        <img src="${b.image || 'images/achat-vente.jpg'}" alt="${b.titre}">
+        ${badge}
+        <div class="card-body">
+          <p class="meta">${meta}</p>
+          <h4>${b.titre}</h4>
+          <p class="prix">${b.prix}</p>
+        </div>`;
+      card.onclick = () => window.location.href = `bien.html?index=${i}`;
+      track.appendChild(card);
+    });
+
+    mettreAJourBoutonFavori();
+  })
+  .catch(() => {
+    document.getElementById('bien-detail').innerHTML =
+      "<p style='padding:60px;text-align:center;color:#aaa;font-family:Jost,sans-serif;'>Erreur lors du chargement.</p>";
+  });
+
+/* NAVBAR */
+document.querySelector(".hamburger").addEventListener("click", () => {
+  document.querySelector(".menu").classList.toggle("active");
+  document.querySelector(".hamburger").classList.toggle("open");
+});
+document.querySelectorAll(".nav-dropdown-wrap").forEach(wrap => {
+  wrap.querySelector(".nav-dropdown-trigger").addEventListener("click", e => {
+    e.preventDefault();
+    const isOpen = wrap.classList.contains("open");
+    document.querySelectorAll(".nav-dropdown-wrap.open").forEach(w => w.classList.remove("open"));
+    if (!isOpen) wrap.classList.add("open");
+  });
+});
+document.addEventListener("click", e => {
+  if (!e.target.closest(".nav-dropdown-wrap"))
+    document.querySelectorAll(".nav-dropdown-wrap.open").forEach(w => w.classList.remove("open"));
+});
+</script>
+
+</body>
+</html>

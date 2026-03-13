@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nos Honoraires — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ============================= */
+/* SECTION PRINCIPALE            */
+/* ============================= */
+
+.honoraires-section {
+    max-width: 680px;
+    margin: 120px auto 0 auto;
+    padding: 60px 24px 70px 24px;
+}
+
+/* ---- Logo ---- */
+.honoraires-logo {
+    display: block;
+    max-width: 160px;
+    margin: 0 auto 44px auto;
+    border-radius: 8px;
+}
+
+/* ---- Titre ---- */
+.honoraires-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    margin: 0 0 10px 0;
+    letter-spacing: 0.02em;
+}
+
+.honoraires-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0 44px 0;
+}
+
+/* ---- Card tableau ---- */
+.honoraires-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease both;
+}
+
+.honoraires-card-header {
+    padding: 18px 28px 14px 28px;
+    border-bottom: 1px solid #f0ede5;
+}
+
+.honoraires-card-header p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #D4AF37;
+    margin: 0;
+}
+
+.honoraires-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 28px;
+    border-bottom: 1px solid #f0ede5;
+    transition: background 0.2s;
+}
+
+.honoraires-row:last-child { border-bottom: none; }
+.honoraires-row:hover { background: #fdfcf8; }
+
+.honoraires-row-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #0D1B3D;
+}
+
+.honoraires-row-value {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #D4AF37;
+    white-space: nowrap;
+    margin-left: 20px;
+}
+
+/* ---- Note ---- */
+.honoraires-note-card {
+    background: #fdfcf8;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    padding: 22px 28px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.08s ease both;
+}
+
+.honoraires-note-card p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #666;
+    line-height: 1.75;
+    margin: 0;
+}
+
+/* ---- SIRET ---- */
+.honoraires-siret {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: #bbb;
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s 0.12s ease both;
+}
+
+/* ============================= */
+/* CTA                           */
+/* ============================= */
+
+.honoraires-cta {
+    text-align: center;
+    padding: 50px 24px 70px 24px;
+    border-top: 1px solid #ece9e0;
+    background: white;
+}
+
+.honoraires-cta p {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #555;
+    margin-bottom: 22px;
+}
+
+.honoraires-cta a {
+    display: inline-block;
+    background: #D4AF37;
+    color: #0D1B3D;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.honoraires-cta a:hover { background: #b99a2f; }
+
+/* ============================= */
+/* ANIMATION                     */
+/* ============================= */
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================= */
+/* RESPONSIVE                    */
+/* ============================= */
+
+@media (max-width: 500px) {
+    .honoraires-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .honoraires-row-value { margin-left: 0; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+  <div class="logo">
+    <a href="index.html"><img src="images/logo2.jpeg" alt="logo"></a>
+  </div>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+        <div class="menu">
+        <a href="index.html">Accueil</a>
+
+        <div class="nav-dropdown-wrap">
+            <a class="nav-dropdown-trigger">Transaction ▾</a>
+            <div class="nav-dropdown">
+            <a href="achat.html">Acheter</a>
+            <a href="vente.html">Vendre</a>
+            </div>
+        </div>
+
+        <div class="nav-dropdown-wrap">
+            <a class="nav-dropdown-trigger">Location ▾</a>
+            <div class="nav-dropdown">
+            <a href="locations.html">Biens à louer</a>
+            <a href="gestion.html">Gestion locative</a>
+            </div>
+        </div>
+
+        <a href="estimation.html">Estimation</a>
+        <a href="contact.html">Contact</a>
+        <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+        </div>
+</nav>
+
+<!-- CONTENU -->
+<section class="honoraires-section">
+
+    <!-- <img class="honoraires-logo" src="images/logo1.jpeg" alt="Logo KELO'ESTATE"> -->
+
+    <h1 class="honoraires-title">Nos honoraires</h1>
+    <p class="honoraires-subtitle">Transparence & clarté</p>
+
+    <div class="honoraires-card">
+        <div class="honoraires-card-header">
+            <p>Honoraires — Vente</p>
+        </div>
+        <div class="honoraires-row">
+            <span class="honoraires-row-label">Jusqu'à 50 000 €</span>
+            <span class="honoraires-row-value">Forfait 5 000 €</span>
+        </div>
+        <div class="honoraires-row">
+            <span class="honoraires-row-label">De 50 001 € à 300 000 €</span>
+            <span class="honoraires-row-value">6 % TTC</span>
+        </div>
+        <div class="honoraires-row">
+            <span class="honoraires-row-label">Au-delà de 300 001 €</span>
+            <span class="honoraires-row-value">5 % TTC</span>
+        </div>
+    </div>
+
+    <div class="honoraires-note-card">
+        <p>Les honoraires sont à la charge du vendeur, sauf en cas de convention expresse. La différence entre les parties est précisée dans le mandat.</p>
+    </div>
+
+    <p class="honoraires-siret">S.A.S KELO'ESTATE — Nice — SIRET 992 666 636 00012</p>
+
+</section>
+
+<!-- CTA -->
+<section class="honoraires-cta">
+    <p>Vous avez une question sur nos honoraires ?</p>
+    <a href="contact.html">Nous contacter</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script>
+document.querySelector(".hamburger").addEventListener("click", () => {
+    document.querySelector(".menu").classList.toggle("active");
+    document.querySelector(".hamburger").classList.toggle("open");
+});
+</script>
+
+</body>
+</html>

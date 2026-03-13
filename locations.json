@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "titre": "Appartement 45m² - Lorient",
+    "prix": "780 € / mois",
+    "image": "images/location1.jpg",
+    "statut": "disponible",
+    "surface": 45,
+    "pieces": 2,
+    "chambres": 1,
+    "ville": "Lorient",
+    "type": "Appartement",
+    "dpe": "D",
+    "description": "Appartement meublé de 45 m² idéalement situé à deux pas du centre-ville de Lorient. Il se compose d'un séjour lumineux avec coin repas, d'une cuisine équipée, d'une chambre avec rangements intégrés, d'une salle d'eau et d'un WC séparé. Parquet stratifié, double vitrage, interphone. Parfait pour un professionnel ou un étudiant cherchant un logement fonctionnel et bien desservi par les transports en commun. Cave incluse."
+  },
+  {
+    "id": 2,
+    "titre": "Maison 90m² - Vannes",
+    "prix": "1 200 € / mois",
+    "image": "images/location2.jpg",
+    "statut": "loué",
+    "surface": 90,
+    "pieces": 4,
+    "chambres": 3,
+    "ville": "Vannes",
+    "type": "Maison",
+    "dpe": "C",
+    "description": "Maison familiale de 90 m² avec jardin privatif dans un quartier calme et résidentiel de Vannes, à 15 minutes à pied du centre historique. Le rez-de-chaussée propose un séjour avec cheminée, une cuisine ouverte équipée et un WC séparé. À l'étage, trois chambres confortables et une salle de bain avec baignoire. Terrasse en bois, jardin clos de 250 m², abri de jardin. Idéale pour une famille, cette maison est actuellement louée."
+  },
+  {
+    "id": 3,
+    "titre": "Studio 28m² - Nice",
+    "prix": "650 € / mois",
+    "image": "images/location3.jpg",
+    "statut": "disponible",
+    "surface": 28,
+    "pieces": 1,
+    "chambres": 0,
+    "ville": "Nice",
+    "type": "Studio",
+    "dpe": "C",
+    "description": "Studio lumineux de 28 m² au 2ème étage d'une résidence bien entretenue, à proximité immédiate d'une station de tramway et des commerces niçois. L'espace de vie optimisé comprend un coin nuit séparé par une verrière, une kitchenette équipée, une salle d'eau avec WC. Exposition plein sud, double vitrage, volets roulants. Idéal pour un étudiant ou un jeune actif souhaitant profiter de la douceur de vivre sur la Côte d'Azur."
+  },
+  {
+    "id": 4,
+    "titre": "Appartement 60m² - Rennes",
+    "prix": "890 € / mois",
+    "image": "images/location4.jpg",
+    "statut": "disponible",
+    "surface": 60,
+    "pieces": 3,
+    "chambres": 2,
+    "ville": "Rennes",
+    "type": "Appartement",
+    "dpe": "B",
+    "description": "Appartement moderne de 60 m² au 3ème étage avec ascenseur, situé à 10 minutes à pied de l'université et des grandes écoles rennaises. Il dispose d'un séjour ouvert sur une cuisine entièrement équipée, de deux chambres, d'une salle de bain et d'un WC séparé. Finitions contemporaines, parquet flottant, menuiseries double vitrage. Digicode, local vélos sécurisé. Quartier dynamique, bien desservi par les lignes de métro et de bus. Cave incluse."
+  },
+  {
+    "id": 5,
+    "titre": "Maison 95m² - Quiberon",
+    "prix": "1 100 € / mois",
+    "image": "images/location5.jpg",
+    "statut": "disponible",
+    "surface": 95,
+    "pieces": 5,
+    "chambres": 3,
+    "ville": "Quiberon",
+    "type": "Maison",
+    "dpe": "D",
+    "description": "Charmante maison bretonne de 95 m² à 400 mètres de la plage, idéale pour une famille souhaitant profiter de la presqu'île de Quiberon. Elle offre au rez-de-chaussée un séjour chaleureux avec insert bois, une cuisine équipée et un WC séparé. L'étage accueille trois chambres lumineuses et une salle de bain rénovée. Jardin clos avec terrasse et barbecue. Quartier calme et bien desservi. Possible en location longue durée ou saisonnière selon disponibilité."
+  }
+]

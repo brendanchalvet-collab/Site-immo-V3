@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction — KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.av-intro {
+  padding: 140px 24px 60px;
+  text-align: center;
+  background: #0D1B3D;
+  position: relative;
+  overflow: hidden;
+}
+.av-intro::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,0.08);
+}
+.av-intro::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,0.06);
+}
+.av-intro-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.av-intro-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #D4AF37;
+  margin-bottom: 14px;
+}
+.av-intro h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  color: white;
+  margin-bottom: 16px;
+  line-height: 1.15;
+}
+.av-intro h1 em { font-style: italic; color: #D4AF37; }
+.av-intro p {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+}
+
+/* TOPBAR */
+.filters-topbar {
+  background: white;
+  border-bottom: 1px solid #ece9e0;
+  padding: 14px 24px;
+  position: sticky;
+  top: 84px;
+  z-index: 90;
+  box-shadow: 0 4px 20px rgba(13,27,61,0.05);
+}
+.filters-topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.btn-open-filters {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  background: #0D1B3D;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-open-filters:hover { background: #1F3A73; }
+.filter-icon { display: flex; flex-direction: column; gap: 3px; }
+.filter-icon span { display: block; height: 2px; background: white; border-radius: 2px; }
+.filter-icon span:nth-child(1) { width: 14px; }
+.filter-icon span:nth-child(2) { width: 10px; }
+.filter-icon span:nth-child(3) { width: 6px; }
+
+.active-filters { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.active-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(13,27,61,0.07);
+  border-radius: 20px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #0D1B3D;
+}
+.active-tag button { background: none; border: none; cursor: pointer; color: #999; font-size: 11px; padding: 0; line-height: 1; }
+.active-tag button:hover { color: #c0392b; }
+
+.inline-sort { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-shrink: 0; }
+.inline-sort label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #aaa;
+  white-space: nowrap;
+}
+.inline-sort select {
+  padding: 8px 12px;
+  border: 1px solid #e0ddd6;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #0D1B3D;
+  background: white;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.inline-sort select:focus { border-color: #D4AF37; }
+
+.results-count {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: #aaa;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.results-count strong { font-weight: 600; color: #0D1B3D; }
+
+/* OVERLAY */
+.filters-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,61,0.45);
+  z-index: 299;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.filters-overlay.open { opacity: 1; visibility: visible; }
+
+/* PANNEAU */
+.filters-panel {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  width: 300px;
+  background: white;
+  z-index: 300;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 40px rgba(13,27,61,0.15);
+}
+.filters-panel.open { transform: translateX(0); }
+
+.filters-panel-head {
+  padding: 22px 22px 18px;
+  border-bottom: 1px solid #f0ede6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: #0D1B3D;
+}
+.filters-panel-head h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: white;
+}
+.head-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #D4AF37;
+  margin-bottom: 4px;
+}
+.btn-close-filters {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.btn-close-filters:hover { background: rgba(255,255,255,0.2); }
+
+.filters-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.filters-panel-body::-webkit-scrollbar { width: 4px; }
+.filters-panel-body::-webkit-scrollbar-thumb { background: #e0ddd6; border-radius: 2px; }
+
+.filter-group { display: flex; flex-direction: column; gap: 7px; }
+.filter-group label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #0D1B3D;
+}
+.filter-group select,
+.filter-group input {
+  padding: 10px 14px;
+  border: 1px solid #e0ddd6;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: #0D1B3D;
+  background: white;
+  outline: none;
+  appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.filter-group select:focus,
+.filter-group input:focus {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+}
+.filter-divider { height: 1px; background: #f0ede6; }
+.filter-price-row { display: flex; gap: 8px; align-items: center; }
+.filter-price-row input { flex: 1; }
+.filter-price-sep { font-family: 'Jost', sans-serif; font-size: 0.8rem; color: #bbb; flex-shrink: 0; }
+
+.filters-panel-foot {
+  padding: 16px 22px;
+  border-top: 1px solid #f0ede6;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.btn-apply {
+  flex: 1;
+  padding: 12px;
+  background: #D4AF37;
+  color: #0D1B3D;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-apply:hover { background: #b99a2f; }
+.btn-reset {
+  padding: 12px 16px;
+  background: none;
+  border: 1px solid #e0ddd6;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #999;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.btn-reset:hover { border-color: #c0392b; color: #c0392b; }
+
+/* GRILLE */
+.av-biens { padding: 32px 24px 80px; background: #f5f4f0; }
+.av-biens-inner { max-width: 1100px; margin: 0 auto; }
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0 28px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.separator.visible { opacity: 1; }
+.separator-line { flex: 1; height: 1px; background: #ddd; }
+.separator-text {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #bbb;
+  white-space: nowrap;
+}
+
+.biens-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+.bien-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #ece9e0;
+  box-shadow: 0 8px 30px rgba(13,27,61,0.07);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  animation: fadeUp 0.5s ease both;
+}
+.bien-card:hover { transform: translateY(-5px); box-shadow: 0 16px 45px rgba(13,27,61,0.12); }
+.bien-card.dimmed { opacity: 0.5; }
+.bien-card.dimmed:hover { opacity: 0.8; }
+.bien-card img { width: 100%; height: 210px; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.bien-card:hover img { transform: scale(1.03); }
+.bien-info { padding: 18px 20px 22px; flex: 1; }
+.bien-info h4 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; font-weight: 400; color: #0D1B3D; margin-bottom: 6px; line-height: 1.3; }
+.bien-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; margin-top: 4px; }
+.bien-tag { font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 400; color: #888; background: #f5f4f0; padding: 3px 8px; border-radius: 4px; }
+.prix { font-family: 'Jost', sans-serif; font-weight: 600; font-size: 1.05rem; color: #D4AF37; }
+
+.btn-favori {
+  position: absolute; top: 10px; right: 10px;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.2s;
+  backdrop-filter: blur(4px); z-index: 2;
+}
+.btn-favori:hover { background: white; transform: scale(1.1); }
+.btn-favori.active { color: #e74c3c; }
+
+.badge {
+  position: absolute; top: 12px; left: 12px;
+  padding: 5px 12px;
+  font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.08em; border-radius: 20px; text-transform: uppercase;
+  backdrop-filter: blur(4px); display: inline-flex; align-items: center; line-height: 1;
+}
+.badge.vente     { background: rgba(13,27,61,0.85);  color: white; }
+.badge.offre     { background: rgba(212,175,55,0.9);  color: #0D1B3D; }
+.badge.compromis { background: rgba(139,90,43,0.88);  color: white; }
+.badge.vendu     { background: rgba(0,0,0,0.6);       color: white; }
+
+.no-results { grid-column: 1/-1; text-align: center; padding: 60px 24px; background: white; border-radius: 16px; border: 1px dashed #ddd; }
+.no-results p { font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 300; color: #aaa; }
+
+.mid-banner { background: #0D1B3D; padding: 70px 24px; text-align: center; }
+.mid-banner-inner { max-width: 580px; margin: 0 auto; }
+.mid-banner h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 400; color: white; margin-bottom: 24px; }
+.mid-banner h2 em { font-style: italic; color: #D4AF37; }
+.mid-banner a { font-family: 'Jost', sans-serif; display: inline-block; padding: 13px 30px; background: #D4AF37; color: #0D1B3D; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.86rem; letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.3s; }
+.mid-banner a:hover { background: #b99a2f; }
+
+.gestion-cta { text-align: center; padding: 50px 24px 70px; border-top: 1px solid #ece9e0; background: white; }
+.gestion-cta p { font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 300; color: #555; margin-bottom: 22px; }
+.gestion-cta a { display: inline-block; background: #D4AF37; color: #0D1B3D; font-family: 'Jost', sans-serif; font-weight: 500; font-size: 0.88rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 14px 32px; border-radius: 8px; text-decoration: none; transition: background 0.3s; }
+.gestion-cta a:hover { background: #b99a2f; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 900px) { .biens-grid { grid-template-columns: repeat(2, 1fr); } .inline-sort label { display: none; } }
+@media (max-width: 600px) { .biens-grid { grid-template-columns: 1fr; } .filters-topbar { top: 72px; } .filters-panel { width: 85vw; } .results-count { display: none; } }
+</style>
+</head>
+<body>
+
+  
+<!-- NAV BAR -->
+<nav class="navbar">
+
+  <div class="logo">
+    <a href="index.html">
+      <img src="images/logo2.jpeg" alt="logo">
+    </a>
+  </div>
+
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="menu">
+
+    <a href="index.html">Accueil</a>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+
+    <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+
+  </div>
+
+</nav>
+
+<!-- INTRO -->
+<section class="av-intro">
+  <div class="av-intro-inner">
+    <p class="av-intro-label">Bretagne &amp; Côte d'Azur</p>
+    <h1>Acheter &amp; <em>Vendre</em></h1>
+    <p>Nous vous accompagnons à chaque étape de votre projet immobilier, de l'estimation à la signature, avec expertise et transparence.</p>
+  </div>
+</section>
+
+<!-- TOPBAR -->
+<div class="filters-topbar">
+  <div class="filters-topbar-inner">
+    <button class="btn-open-filters" onclick="ouvrirFiltres()">
+      <div class="filter-icon"><span></span><span></span><span></span></div>
+      Filtres
+    </button>
+    <div class="active-filters" id="active-filters"></div>
+    <div class="inline-sort">
+      <label>Trier</label>
+      <select id="f-sort" onchange="appliquerFiltres()">
+        <option value="default">Par défaut</option>
+        <option value="prix-asc">Prix ↑</option>
+        <option value="prix-desc">Prix ↓</option>
+        <option value="az">A → Z</option>
+      </select>
+    </div>
+    <span class="results-count"><strong id="count-match">0</strong> résultat(s)</span>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="filters-overlay" id="filters-overlay" onclick="fermerFiltres()"></div>
+
+<!-- PANNEAU LATÉRAL -->
+<div class="filters-panel" id="filters-panel">
+  <div class="filters-panel-head">
+    <div>
+      <p class="head-label">Recherche</p>
+      <h3>Filtrer les biens</h3>
+    </div>
+    <button class="btn-close-filters" onclick="fermerFiltres()">✕</button>
+  </div>
+  <div class="filters-panel-body">
+
+    <div class="filter-group">
+      <label>Type de bien</label>
+      <select id="f-type">
+        <option value="">Tous les types</option>
+        <option value="Maison">Maison</option>
+        <option value="Appartement">Appartement</option>
+        <option value="Terrain">Terrain</option>
+        <option value="Villa">Villa</option>
+      </select>
+    </div>
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Ville</label>
+      <select id="f-region"><option value="">Toutes les villes</option></select>
+    </div>
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Statut</label>
+      <select id="f-statut">
+        <option value="">Tous les statuts</option>
+        <option value="en vente">En vente</option>
+        <option value="sous offre">Sous offre</option>
+        <option value="sous compromis">Sous compromis</option>
+        <option value="vendu">Vendu</option>
+      </select>
+    </div>
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Budget (€)</label>
+      <div class="filter-price-row">
+        <input type="number" id="f-min" placeholder="Min" min="0">
+        <span class="filter-price-sep">—</span>
+        <input type="number" id="f-max" placeholder="Max" min="0">
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Surface (m²)</label>
+      <div class="filter-price-row">
+        <input type="number" id="f-surf-min" placeholder="Min" min="0">
+        <span class="filter-price-sep">—</span>
+        <input type="number" id="f-surf-max" placeholder="Max" min="0">
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <label>Pièces (minimum)</label>
+      <select id="f-pieces">
+        <option value="">Peu importe</option>
+        <option value="1">1+</option>
+        <option value="2">2+</option>
+        <option value="3">3+</option>
+        <option value="4">4+</option>
+        <option value="5">5+</option>
+      </select>
+    </div>
+
+  </div>
+  <div class="filters-panel-foot">
+    <button class="btn-reset" onclick="resetFiltres()">Réinitialiser</button>
+    <button class="btn-apply" onclick="appliquerFiltres(); fermerFiltres()">Voir les biens</button>
+  </div>
+</div>
+
+<!-- GRILLE -->
+<section class="av-biens">
+  <div class="av-biens-inner">
+    <div class="biens-grid" id="vente-grid"></div>
+    <div class="separator" id="separator">
+      <div class="separator-line"></div>
+      <span class="separator-text">Autres biens</span>
+      <div class="separator-line"></div>
+    </div>
+    <div class="biens-grid" id="autres-grid"></div>
+  </div>
+</section>
+
+<div class="mid-banner">
+  <div class="mid-banner-inner">
+    <h2>Un projet de <em>vente ?</em></h2>
+    <a href="contact.html">Nous contacter</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBlrPa4c7Hl7CY5EY5ssLwsLqMbOGL7v6k",
+  authDomain: "keloestate.firebaseapp.com",
+  projectId: "keloestate",
+  storageBucket: "keloestate.firebasestorage.app",
+  messagingSenderId: "510035287199",
+  appId: "1:510035287199:web:2c1d6bb108b923837256aa"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser = null;
+let userFavoris = new Set();
+
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  const btn = document.getElementById('nav-user-btn');
+  if (user && btn) {
+    btn.textContent = (user.displayName || user.email).split(' ')[0];
+    chargerFavorisUser();
+  }
+});
+
+function chargerFavorisUser() {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).collection('favoris')
+    .onSnapshot(snap => {
+      userFavoris = new Set(snap.docs.map(d => d.data().titre));
+      document.querySelectorAll('.btn-favori').forEach(b => {
+        b.textContent = userFavoris.has(b.dataset.titre) ? '♥' : '♡';
+        b.classList.toggle('active', userFavoris.has(b.dataset.titre));
+      });
+    });
+}
+
+function toggleFavori(btn, item, index) {
+  if (!currentUser) { window.location.href = 'login.html'; return; }
+  const ref = db.collection('users').doc(currentUser.uid).collection('favoris');
+  if (userFavoris.has(item.titre)) {
+    ref.where('titre', '==', item.titre).get().then(s => s.forEach(d => d.ref.delete()));
+  } else {
+    ref.add({ titre: item.titre, prix: item.prix, image: item.image||'', statut: item.statut||'', index, ajouteLe: firebase.firestore.FieldValue.serverTimestamp() });
+  }
+}
+
+/* PANNEAU */
+function ouvrirFiltres() {
+  document.getElementById('filters-panel').classList.add('open');
+  document.getElementById('filters-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function fermerFiltres() {
+  document.getElementById('filters-panel').classList.remove('open');
+  document.getElementById('filters-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* DONNÉES */
+let allBiens = [];
+
+function parsePrix(str) { return parseInt((str||'').replace(/[^\d]/g,''),10)||0; }
+
+function badgeHTML(s) {
+  if (s==='en vente')       return '<span class="badge vente">En vente</span>';
+  if (s==='sous offre')     return '<span class="badge offre">Sous offre</span>';
+  if (s==='sous compromis') return '<span class="badge compromis">Sous compromis</span>';
+  if (s==='vendu')          return '<span class="badge vendu">Vendu</span>';
+  return '';
+}
+
+function creerCarte(item, index, dimmed) {
+  const card = document.createElement('div');
+  card.className = 'bien-card' + (dimmed ? ' dimmed' : '');
+  card.style.animationDelay = (index % 9) * 0.05 + 's';
+  const isFav = userFavoris.has(item.titre);
+  const tags = [];
+  if (item.type)    tags.push(`<span class="bien-tag">${item.type}</span>`);
+  if (item.ville)   tags.push(`<span class="bien-tag">${item.ville}</span>`);
+  if (item.surface) tags.push(`<span class="bien-tag">${item.surface} m²</span>`);
+  if (item.pieces)  tags.push(`<span class="bien-tag">${item.pieces} pièces</span>`);
+  card.innerHTML = `
+    <img src="${item.image||'images/achat-vente.jpg'}" alt="${item.titre}">
+    ${badgeHTML(item.statut)}
+    <button class="btn-favori ${isFav?'active':''}" data-titre="${item.titre}"
+      onclick="event.stopPropagation();toggleFavori(this,allBiens[${index}],${index})">
+      ${isFav?'♥':'♡'}
+    </button>
+    <div class="bien-info">
+      <h4>${item.titre}</h4>
+      <div class="bien-meta">${tags.join('')}</div>
+      <p class="prix">${item.prix}</p>
+    </div>`;
+  card.onclick = () => window.location.href = `bien.html?index=${index}`;
+  return card;
+}
+
+function mettreAJourBadges() {
+  const defs = [
+    { id:'f-type',     label: v => v },
+    { id:'f-region',   label: v => v },
+    { id:'f-statut',   label: v => v },
+    { id:'f-min',      label: v => `min ${Number(v).toLocaleString('fr-FR')} €` },
+    { id:'f-max',      label: v => `max ${Number(v).toLocaleString('fr-FR')} €` },
+    { id:'f-surf-min', label: v => `surf. min ${v} m²` },
+    { id:'f-surf-max', label: v => `surf. max ${v} m²` },
+    { id:'f-pieces',   label: v => `${v}+ pièces` },
+  ];
+  const container = document.getElementById('active-filters');
+  container.innerHTML = '';
+  defs.forEach(({ id, label }) => {
+    const val = document.getElementById(id)?.value;
+    if (val) {
+      const tag = document.createElement('span');
+      tag.className = 'active-tag';
+      tag.innerHTML = `${label(val)} <button onclick="document.getElementById('${id}').value='';appliquerFiltres()">✕</button>`;
+      container.appendChild(tag);
+    }
+  });
+}
+
+function appliquerFiltres() {
+  const type    = document.getElementById('f-type').value;
+  const ville   = document.getElementById('f-region').value;
+  const statut  = document.getElementById('f-statut').value;
+  const min     = parseInt(document.getElementById('f-min').value) || 0;
+  const max     = parseInt(document.getElementById('f-max').value) || Infinity;
+  const surfMin = parseInt(document.getElementById('f-surf-min').value) || 0;
+  const surfMax = parseInt(document.getElementById('f-surf-max').value) || Infinity;
+  const pieces  = parseInt(document.getElementById('f-pieces').value) || 0;
+  const sort    = document.getElementById('f-sort').value;
+
+  let biens = [...allBiens];
+  if (sort==='prix-asc')  biens.sort((a,b) => parsePrix(a.prix)-parsePrix(b.prix));
+  if (sort==='prix-desc') biens.sort((a,b) => parsePrix(b.prix)-parsePrix(a.prix));
+  if (sort==='az')        biens.sort((a,b) => a.titre.localeCompare(b.titre));
+
+  const match=[], autres=[];
+  biens.forEach(item => {
+    const prix = parsePrix(item.prix);
+    const surf = item.surface || 0;
+    const pc   = item.pieces  || 0;
+    const ok =
+      (!type   || (item.type  && item.type.toLowerCase().includes(type.toLowerCase()))) &&
+      (!ville  || (item.ville && item.ville.toLowerCase().includes(ville.toLowerCase()))) &&
+      (!statut || item.statut===statut) &&
+      prix>=min && prix<=max &&
+      surf>=surfMin && surf<=surfMax &&
+      pc>=pieces;
+    (ok ? match : autres).push({ item, origIndex: allBiens.indexOf(item) });
+  });
+
+  const grid = document.getElementById('vente-grid');
+  grid.innerHTML = '';
+  if (match.length===0) {
+    grid.innerHTML = '<div class="no-results"><p>Aucun bien ne correspond à vos critères.</p></div>';
+  } else {
+    match.forEach(({ item, origIndex }) => grid.appendChild(creerCarte(item, origIndex, false)));
+  }
+
+  const autresGrid = document.getElementById('autres-grid');
+  const separator  = document.getElementById('separator');
+  autresGrid.innerHTML = '';
+  const hasFiltre = type||ville||statut||min||max<Infinity||surfMin||surfMax<Infinity||pieces;
+  if (hasFiltre && autres.length>0) {
+    separator.classList.add('visible');
+    autres.forEach(({ item, origIndex }) => autresGrid.appendChild(creerCarte(item, origIndex, true)));
+  } else {
+    separator.classList.remove('visible');
+  }
+
+  document.getElementById('count-match').textContent = match.length;
+  mettreAJourBadges();
+}
+
+function resetFiltres() {
+  ['f-type','f-region','f-statut','f-min','f-max','f-surf-min','f-surf-max','f-pieces'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-sort').value = 'default';
+  appliquerFiltres();
+}
+
+fetch('biens.json')
+  .then(r => r.json())
+  .then(data => {
+    allBiens = data;
+    const villes = [...new Set(data.map(b => b.ville).filter(Boolean))].sort();
+    const sel = document.getElementById('f-region');
+    villes.forEach(v => { const o = document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
+    appliquerFiltres();
+  })
+  .catch(err => console.error('Erreur biens.json :', err));
+
+/* NAVBAR */
+document.querySelector(".hamburger").addEventListener("click", () => {
+  document.querySelector(".menu").classList.toggle("active");
+  document.querySelector(".hamburger").classList.toggle("open");
+});
+document.querySelectorAll(".nav-dropdown-wrap").forEach(wrap => {
+  wrap.querySelector(".nav-dropdown-trigger").addEventListener("click", e => {
+    e.preventDefault();
+    const isOpen = wrap.classList.contains("open");
+    document.querySelectorAll(".nav-dropdown-wrap.open").forEach(w => w.classList.remove("open"));
+    if (!isOpen) wrap.classList.add("open");
+  });
+});
+document.addEventListener("click", e => {
+  if (!e.target.closest(".nav-dropdown-wrap"))
+    document.querySelectorAll(".nav-dropdown-wrap.open").forEach(w => w.classList.remove("open"));
+});
+</script>
+
+</body>
+</html>

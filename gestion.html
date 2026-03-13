@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion locative - KELO'ESTATE</title>
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ============================= */
+/* INTRO                         */
+/* ============================= */
+
+.gestion-intro {
+    max-width: 780px;
+    margin: 120px auto 0 auto;
+    padding: 60px 24px 50px 24px;
+    text-align: center;
+}
+
+.gestion-intro h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+}
+
+.gestion-intro p {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* ============================= */
+/* SERVICES CARDS                */
+/* ============================= */
+
+.gestion-services {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 70px 24px;
+}
+
+.gestion-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.gestion-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #ece9e0;
+    box-shadow: 0 12px 40px rgba(13, 27, 61, 0.07);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.6s ease both;
+}
+
+.gestion-card:nth-child(2) { animation-delay: 0.08s; }
+.gestion-card:nth-child(3) { animation-delay: 0.16s; }
+
+.gestion-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 45px rgba(13, 27, 61, 0.12);
+}
+
+.gestion-card img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+}
+
+.gestion-card-body {
+    padding: 24px 24px 28px 24px;
+}
+
+.gestion-card-body h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 10px;
+}
+
+.gestion-card-body p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #666;
+    line-height: 1.7;
+}
+
+/* ============================= */
+/* PROCESS                       */
+/* ============================= */
+
+.gestion-process {
+    background: white;
+    border-top: 1px solid #ece9e0;
+    border-bottom: 1px solid #ece9e0;
+    padding: 70px 24px;
+}
+
+.gestion-process-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.gestion-process-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 400;
+    color: #0D1B3D;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+}
+
+/* Ligne de connexion entre les étapes */
+.process-steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: #ece9e0;
+    z-index: 0;
+}
+
+.step {
+    background: #fdfcf8;
+    border: 1px solid #ece9e0;
+    border-radius: 16px;
+    padding: 28px 20px 24px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.3s, transform 0.3s;
+    animation: fadeUp 0.6s ease both;
+}
+
+.step:nth-child(2) { animation-delay: 0.08s; }
+.step:nth-child(3) { animation-delay: 0.16s; }
+.step:nth-child(4) { animation-delay: 0.24s; }
+
+.step:hover {
+    box-shadow: 0 10px 30px rgba(13, 27, 61, 0.08);
+    transform: translateY(-4px);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #0D1B3D;
+    color: #D4AF37;
+    border-radius: 50%;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.step h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #0D1B3D;
+    margin-bottom: 8px;
+}
+
+.step p {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ============================= */
+/* CTA BAS DE PAGE               */
+/* ============================= */
+
+.gestion-cta {
+    text-align: center;
+    padding: 70px 24px;
+}
+
+.gestion-cta p {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.gestion-cta a {
+    display: inline-block;
+    background: #D4AF37;
+    color: #0D1B3D;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.gestion-cta a:hover { background: #b99a2f; }
+
+/* ============================= */
+/* ANIMATIONS                    */
+/* ============================= */
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================= */
+/* RESPONSIVE                    */
+/* ============================= */
+
+@media (max-width: 992px) {
+    .gestion-services-grid { grid-template-columns: repeat(2, 1fr); }
+    .process-steps { grid-template-columns: repeat(2, 1fr); }
+    .process-steps::before { display: none; }
+}
+
+@media (max-width: 600px) {
+    .gestion-services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV BAR -->
+<nav class="navbar">
+
+  <div class="logo">
+    <a href="index.html">
+      <img src="images/logo2.jpeg" alt="logo">
+    </a>
+  </div>
+
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="menu">
+
+    <a href="index.html">Accueil</a>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Transaction ▾</a>
+      <div class="nav-dropdown">
+        <a href="achat.html">Acheter</a>
+        <a href="vente.html">Vendre</a>
+      </div>
+    </div>
+
+    <div class="nav-dropdown-wrap">
+      <a class="nav-dropdown-trigger">Location ▾</a>
+      <div class="nav-dropdown">
+        <a href="locations.html">Biens à louer</a>
+        <a href="gestion.html">Gestion locative</a>
+      </div>
+    </div>
+
+    <a href="estimation.html">Estimation</a>
+    <a href="contact.html">Contact</a>
+
+    <a href="espace-client.html" class="nav-espace-client">Espace client</a>
+
+  </div>
+
+</nav>
+
+<!-- INTRO -->
+<section class="gestion-intro">
+    <h1>Gestion locative</h1>
+    <p>Confiez-nous la gestion de votre bien immobilier et profitez d'une gestion complète et sécurisée. Nous nous occupons de toutes les démarches afin de valoriser votre patrimoine et garantir la tranquillité de votre investissement.</p>
+</section>
+
+<!-- SERVICES -->
+<section class="gestion-services">
+    <div class="gestion-services-grid">
+
+        <div class="gestion-card">
+            <img src="images/location.png" alt="Recherche locataire">
+            <div class="gestion-card-body">
+                <h3>Recherche de locataires</h3>
+                <p>Diffusion de votre bien, sélection des dossiers, organisation des visites et choix du locataire idéal.</p>
+            </div>
+        </div>
+
+        <div class="gestion-card">
+            <img src="images/loyers.jpg" alt="Gestion loyers">
+            <div class="gestion-card-body">
+                <h3>Gestion des loyers</h3>
+                <p>Encaissement des loyers, quittances, relances et suivi des paiements pour sécuriser vos revenus locatifs.</p>
+            </div>
+        </div>
+
+        <div class="gestion-card">
+            <img src="images/administratif.jpeg" alt="Suivi administratif">
+            <div class="gestion-card-body">
+                <h3>Suivi administratif</h3>
+                <p>Rédaction des baux, états des lieux, gestion des assurances et obligations légales.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section class="gestion-process">
+    <div class="gestion-process-inner">
+        <h2 class="gestion-process-title">Comment fonctionne la gestion locative ?</h2>
+        <div class="process-steps">
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Mise en location</h4>
+                <p>Estimation du loyer et diffusion de l'annonce.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Sélection</h4>
+                <p>Analyse des dossiers et sélection du locataire.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Gestion</h4>
+                <p>Encaissement des loyers et gestion quotidienne.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h4>Suivi du bien</h4>
+                <p>Gestion des travaux et entretien du logement.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="gestion-cta">
+    <p>Vous souhaitez nous confier la gestion de votre bien ?</p>
+    <a href="contact.html">Nous contacter</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-light">
+  <div class="footer-column">
+    <p><strong>L'AGENCE</strong></p>
+    <p><strong>2 Place de la Gare du Sud,<br>06000 NICE</strong></p>
+    <p><a href="contact.html">Nous contacter</a></p>
+    <p><a href="presentation.html">Présentation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Nos services</strong></p>
+    <p><a href="achat.html">Biens en vente</a></p>
+    <p><a href="locations.html">Biens à louer</a></p>
+    <p><a href="vente.html">Vente</a></p>
+    <p><a href="gestion.html">Gestion locative</a></p>
+    <p><a href="estimation.html">Estimation</a></p>
+  </div>
+  <div class="footer-column">
+    <p><strong>Liens utiles</strong></p>
+    <p><a href="honoraires.html">Nos honoraires</a></p>
+    <p><a href="mentions-legales.html">Mentions légales</a></p>
+    <p><a href="politiques-confidentialite.html">Politique de confidentialité</a></p>
+  </div>
+</div>
+<div class="footer-top">
+  <div class="socials">
+    <a href="https://www.instagram.com/keloestate/" target="_blank"><img src="images/insta.png" alt="Instagram"></a>
+    <a href="https://www.linkedin.com/in/toncompte" target="_blank"><img src="images/linkedin.png" alt="LinkedIn"></a>
+  </div>
+</div>
+<div class="footer-bottom">
+  <p>© 2026 KELO'ESTATE</p>
+</div>
+</footer>
+
+<script>
+
+// =============================
+// MENU MOBILE
+// =============================
+
+const hamburger = document.querySelector(".hamburger");
+const menu = document.querySelector(".menu");
+
+hamburger.addEventListener("click", () => {
+
+    hamburger.classList.toggle("open");
+    menu.classList.toggle("active");
+
+});
+
+</script>
+
+</body>
+</html>
